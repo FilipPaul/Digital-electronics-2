@@ -12,5 +12,5 @@
 R = \frac{V_{SUPPLY}-V_{LED}}{I} = \frac{5-3}{I}
 | **LED color** | **Supply voltage** | **LED current** | **LED voltage** | **Resistor value** |
 | :-: | :-: | :-: | :-: | :-: |
-| red | 5&nbsp;V | 20&nbsp;mA | 1,7V | 660R |
-| blue | 5&nbsp;V | 20&nbsp;mA | 3V| 100R |
+| red | 5&nbsp;V | 20&nbsp;mA | 1,7&nbsp;V | 660&nbsp;R |
+| blue | 5&nbsp;V | 20&nbsp;mA | 3&nbsp;V| 100&nbsp;R |
