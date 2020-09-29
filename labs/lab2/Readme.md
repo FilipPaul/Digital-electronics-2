@@ -17,15 +17,16 @@
 | blue | 5&nbsp;V | 20&nbsp;mA | 3&nbsp;V| 100&nbsp;&Omega; |
 
 <h2> Lab results </h2>
+<br>
 | **DDRB** | **Description** |
 | :-: | :-- |
 | 0 | Input pin |
-| 1 | |
+| 1 | Output pin |
 
 | **PORTB** | **Description** |
 | :-: | :-- |
 | 0 | Output low value |
-| 1 | |
+| 1 | Output HIGH value|
 
 | **DDRB** | **PORTB** | **Direction** | **Internal pull-up resistor** | **Description** |
 | :-: | :-: | :-: | :-: | :-- |
