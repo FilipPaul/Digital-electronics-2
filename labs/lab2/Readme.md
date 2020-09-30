@@ -35,7 +35,9 @@
 | 0 | 1 |1| input | no | Tri-state, high-impedance |
 | 1 | 0 |X| output | no | Output low (sink) |
 | 1 | 1 |1| output | no | Output high (source) |
-
+ 
+ <h3> Arduiono UNO Schematics <\h3>
+ img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab2/pictures/Arduino_PINOUT.jpg">
 
 
 
