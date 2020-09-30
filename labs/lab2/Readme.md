@@ -50,16 +50,16 @@
 |   | 3 | Yes (Arduino pin 11,MOSI,PWM) |
 |   | 4 | Yes (Arduino pin 12,MISO) |
 |   | 5 | Yes (Arduino pin 13, internal LED, SCK) |
-|   | 6 | Yes (Arduino pin OSC1,XTAL1,) |
-|   | 7 | Yes (Arduino pin OSC2,XTAL2,) |
+|   | 6 | NO(Arduino pin OSC1,XTAL1,) |
+|   | 7 | NO (Arduino pin OSC2,XTAL2,) |
 | C | 0 | Yes (Arduino pin A0(14)) |
 |   | 1 | Yes (Arduino pin A1(15)) |
 |   | 2 | Yes (Arduino pin A2(16)) |
 |   | 3 | Yes (Arduino pin A3(17)) |
 |   | 4 | Yes (Arduino pin A4(18)),SDA |
 |   | 5 | Yes (Arduino pin A5(19)),SCL |
-|   | 6 | Yes (Arduino pin RST)  |
-|   | 7 | Input only (Arduino pin Undefined ) |
+|   | 6 | NO (Arduino pin RST)  |
+|   | 7 | NO (Arduino pin Undefined ) |
 | D | 0 | Yes (Arduino pin RXD<-0) |
 |   | 1 | Yes (Arduino pin TXD(1) |
 |   | 2 | Yes (Arduino pin 2) |

@@ -13,23 +13,39 @@
 
 /* Defines -----------------------------------------------------------*/
 #define LED_GREEN   PB5     //arduino 13 AVR pin where green LED is connected
-#define LED_BLUE    PD6     // arduino 6
+#define LED_BLUE    PC0     // arduino 6
+#define SWITCH      PD5     // arduino 5
 #define BLINK_DELAY 250
 #ifndef F_CPU
 #define F_CPU 16000000      // CPU frequency in Hz required for delay
 #endif
+bool toggle_state = 1;
 
 /* Includes ----------------------------------------------------------*/
 #include <util/delay.h>     // Functions for busy-wait delay loops
 #include <avr/io.h>         // AVR device-specific IO definitions
 
 /* Functions ---------------------------------------------------------*/
+
+void toggle(){
+toggle_state = !toggle_state;
+_delay_ms(BLINK_DELAY);
+
+}
 /**
+ 
  * Main function where the program execution begins. Toggle two LEDs 
  * when a push button is pressed.
  */
 int main(void)
+
 {
+    Serial.begin(9600);
+    /*PUSHTBUTTON*/
+    DDRD = DDRD & ~(0<<SWITCH); // null DDRD
+    //  setting pull up
+    PORTD = PORTD |(1<<SWITCH); //
+
     /* GREEN LED */
     // Set pin as output in Data Direction Register...
     DDRB = DDRB | (1<<LED_GREEN);
@@ -38,17 +54,23 @@ int main(void)
 
     /* BLUE LED */
     // Set pin as output in Data Direction Register...
-    DDRB = DDRB | (1<<LED_BLUE);
+    DDRC = DDRC | (1<<LED_BLUE);
     // ...and turn LED off in Data Register
-    PORTB = PORTB & ~(1<<LED_BLUE);
+    PORTC = PORTC & ~(1<<LED_BLUE);
 
     // Infinite loop
     while (1)
     {
+       if (bit_is_clear(PIND,SWITCH)){
+
         PORTB = PORTB^(1<<LED_GREEN);
-        PORTB = PORTB^(1<<LED_BLUE);
+        PORTC = PORTC^(1<<LED_BLUE);
         // Pause several milliseconds
         _delay_ms(BLINK_DELAY);
+
+        }
+        
+
 
         // WRITE YOUR CODE HERE
     }
