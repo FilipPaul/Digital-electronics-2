@@ -1,4 +1,4 @@
-<h1> lab1 </h1>
+<h1> lab2 </h1>
 <h2> Preparation TASK </h2>
 
 <h3> LEDs in common wiring</h3>
