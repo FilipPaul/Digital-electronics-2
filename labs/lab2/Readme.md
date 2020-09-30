@@ -68,3 +68,12 @@
 |   | 5 | Yes (Arduino pin 5, PWM) |
 |   | 6 | Yes (Arduino pin 6. PWM) |
 |   | 7 | Yes (Arduino pin 7, PWM) |
+
+<h3> Test circuit and code </h3>
+<video width="320" height="240" controls>
+  <source src="https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab2/pictures/blink.mp4" type="video/mp4">
+</video>
+
+<h3> My own button bouncing </h3>
+<img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab2/pictures/bouncing_button.png">
+
