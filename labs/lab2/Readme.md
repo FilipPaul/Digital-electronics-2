@@ -70,8 +70,7 @@
 |   | 7 | Yes (Arduino pin 7, PWM) |
 
 <h3> Test circuit and code </h3>
-video: "https://www.youtube.com/embed/3V4dp1LsL20"
-<iframe width="560" height="315" src="https://www.youtube.com/embed/3V4dp1LsL20" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab2/pictures/blink.gif">
 
 <h3> My own button bouncing </h3>
 <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab2/pictures/bouncing_button.png">
