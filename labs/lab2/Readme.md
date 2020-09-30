@@ -37,7 +37,7 @@
 | 1 | 1 |1| output | no | Output high (source) |
  
  <h3> Arduiono UNO Schematics </h3>
- img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab2/pictures/Arduino_PINOUT.jpg">
+ <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab2/pictures/Arduino_PINOUT.jpg">
 
 
 
