@@ -45,6 +45,8 @@ int main(void)
     // Infinite loop
     while (1)
     {
+        PORTB = PORTB^(1<<LED_GREEN);
+        PORTB = PORTB^(1<<LED_BLUE);
         // Pause several milliseconds
         _delay_ms(BLINK_DELAY);
 
