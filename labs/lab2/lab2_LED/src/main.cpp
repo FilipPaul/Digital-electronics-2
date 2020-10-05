@@ -32,31 +32,21 @@ toggle_state = !toggle_state;
 _delay_ms(BLINK_DELAY);
 
 }
-/**
- 
- * Main function where the program execution begins. Toggle two LEDs 
- * when a push button is pressed.
- */
-int main(void)
 
+int main(void){
+// Set pin as output in Data Direction Register...
+for (int i = 1; i < 6; i++)
 {
+      // Set pin as output in Data Direction Register...
+    DDRD = DDRD | (1<<i);
+    // ...and turn LED off in Data Register
+    PORTD = PORTD | (1<<i);
+  
+}
+
+
     Serial.begin(9600);
-    /*PUSHTBUTTON*/
-    DDRD = DDRD & ~(0<<SWITCH); // null DDRD
-    //  setting pull up
-    PORTD = PORTD |(1<<SWITCH); //
 
-    /* GREEN LED */
-    // Set pin as output in Data Direction Register...
-    DDRB = DDRB | (1<<LED_GREEN);
-    // ...and turn LED off in Data Register
-    PORTB = PORTB & ~(1<<LED_GREEN);
-
-    /* BLUE LED */
-    // Set pin as output in Data Direction Register...
-    DDRC = DDRC | (1<<LED_BLUE);
-    // ...and turn LED off in Data Register
-    PORTC = PORTC & ~(1<<LED_BLUE);
 
     // Infinite loop
     while (1)
