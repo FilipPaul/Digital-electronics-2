@@ -161,8 +161,8 @@ int main(void)
 
 <h3> Knight Rider </h3>
 <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab2/pictures/simul.gif">
-
-<pre><code class="language-pascal">
+<br>
+```c
 #include <Arduino.h>
 #define analog_pin = A0
 #ifndef F_CPU
@@ -232,5 +232,4 @@ int main(void){
     // Will never reach this
     return 0;
 }
-</code></pre>
-sadasd
+```
