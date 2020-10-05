@@ -77,6 +77,7 @@
 <h3> My own button bouncing </h3>
 <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab2/pictures/bouncing_button.png">
 <br>
+
 <pre><code class="language-pascal">
 /***********************************************************************
  * 
@@ -158,6 +159,7 @@ int main(void)
     return 0;
 }
 </code></pre>
+
 
 <h3> Knight Rider </h3>
 <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab2/pictures/simul.gif">
