@@ -6,6 +6,7 @@
 uint8_t analogValue = 100;
 int led_detect = 0;
 bool flag = 0;
+int my_delay;
 void KnightRider()
 {
    if (flag == 0){
@@ -59,9 +60,10 @@ int main(void){
     while (1)
     {
     //mydelay = analogRead(0)  //default 0-1023ms
+   // my_delay = analogRead(A0);
       // there can be stored value potentiometer value, delay
   KnightRider();
-  _delay_ms(100);
+  _delay_ms(50);
     }
 
     // Will never reach this
