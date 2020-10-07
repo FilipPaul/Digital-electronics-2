@@ -11,7 +11,7 @@ pointer * : this datatypes 'points' to value at adress -- syntax: *variable
 
 <h3>2. Complete the following table with C data types.</h3>
 
-    | **Data type** | **Number of bits** | **Range** | **Description** |
+| **Data type** | **Number of bits** | **Range** |**Description**|
 | :-: | :-: | :-: | :-- | 
 | `uint8_t`  | 8 | 0, 1, ..., 255 | Unsigned 8-bit integer |
 | `int8_t`   | 8 | -128...0...127 |Signed 8-bit integer|
@@ -52,7 +52,7 @@ uint16_t calculate(uint8_t x, uint8_t y)
 ```
 
 <h2> Lab results </h2>
-<h3> <a href = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab3/lib/gpio/src/gpio.cpp"> gpio.cpp</a> <h3>
+<h3> <a href = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab3/lib/gpio/src/gpio.cpp"> gpio.cpp</a> </h3>
 
 ```C
 /***********************************************************************
@@ -128,7 +128,7 @@ uint8_t GPIO_read(volatile uint8_t *reg_name, uint8_t pin_num)
 
 ```
 
-<h3> <a href = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab3/src/main.cpp"> main.cpp</a> <h3>
+<h3> <a href = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab3/src/main.cpp"> main.cpp</a> </h3>
 
 ```C
 #include <Arduino.h>
@@ -182,6 +182,6 @@ int main(void)
     return 0;
 }
 ```
-<h3> Declaration vs definition of fucntion</h3>
+<h3> Declaration vs definition of function</h3>
 <p> Declaration means, that you create "variable (function)", by doing that, this fucnction can be called in your code, but does nothing.
-Definition of function means, that you create an algorith, that will be executed, when function is called. Examples of these are in main.cpp (here you call functions), in gpio.h (here you declare functions) and in gpio.cpp(here you define functions).</p>
+Definition of function means, that you create an algorithm, that will be executed, when function is called. Examples of these are in main.cpp (here you call functions), in gpio.h (here you declare functions) and in gpio.cpp(here you define functions).</p>
