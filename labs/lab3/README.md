@@ -182,6 +182,10 @@ int main(void)
     return 0;
 }
 ```
+<h3><a href = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab3/pictures/simulation.gif">  Simulation</a></h3>
+ <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab3/pictures/simulation.gif">
+<br>
+
 <h3> Declaration vs definition of function</h3>
 <p> Declaration means, that you create "variable (function)", by doing that, this fucnction can be called in your code, but does nothing.
 Definition of function means, that you create an algorithm, that will be executed, when function is called. Examples of these are in main.cpp (here you call functions), in gpio.h (here you declare functions) and in gpio.cpp(here you define functions).</p>
