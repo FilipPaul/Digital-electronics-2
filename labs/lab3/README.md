@@ -3,11 +3,11 @@
 <h2> Preparation tasks </h2>
 
 <h3>1. What is the meaning of `volatile` keyword in C? What is the difference between operators `*` and `&`, such as `*reg` and `&DDRB`? </h3>
-volatile: disables compiler optimizations, It tells the compiler that the value of the variable may change at any time--without any action being taken by the code, For Ex: this datatype is needed when using interupts on some microcontrolers like ESP32 and etc.
+<p>volatile: disables compiler optimizations, It tells the compiler that the value of the variable may change at any time--without any action being taken by the code, For Ex: this datatype is needed when using interupts on some microcontrolers like ESP32 and etc.
 pointer * : this datatypes 'points' to value at adress -- syntax: *variable
 & : adress of "smthing" -- syntax: &variable
 *reg : it points to the value at adress of register name stored in variable reg
-&DDRB : returns adress of DDRB register
+&DDRB : returns adress of DDRB register</p>
 
 <h3>2. Complete the following table with C data types.</h3>
 
