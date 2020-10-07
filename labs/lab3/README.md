@@ -19,7 +19,7 @@ pointer * : this datatypes 'points' to value at adress -- syntax: *variable
 | `int16_t`  |  16 | -65536...0...65535 |Signed 16-bit integer|
 | `float`    | 32 | -3.4e+38, ..., 3.4e+38 | Single-precision floating-point |
 | `void`     | x | x | keyword to use as a placeholder where you would put a data type, to represent "no data". |
-<h3> Complete the cone </h3>
+<h3> Complete the code </h3>
 
 ```C
 #include <avr/io.h>
