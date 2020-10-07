@@ -1,165 +1,187 @@
-# Lab 3: Creation of user library for GPIO control
+<h1> Lab 3 </h1>
 
-#### Contents
+<h2> Preparation tasks </h2>
 
-1. [Lab prerequisites](#Lab-prerequisites)
-2. [Used hardware components](#Used-hardware-components)
-3. [Synchronize Git and create a new project](#Synchronize-Git-and-create-a-new-project)
-4. [Header file](#Header-file)
-5. [Source file](#Source-file)
-6. [Final application](#Final-application)
-7. [Clean project and synchronize git](#Clean-project-and-synchronize-git)
-8. [Ideas for other tasks](#Ideas-for-other-tasks)
+<h3>1. What is the meaning of `volatile` keyword in C? What is the difference between operators `*` and `&`, such as `*reg` and `&DDRB`? </h3>
+volatile: disables compiler optimizations, It tells the compiler that the value of the variable may change at any time--without any action being taken by the code, For Ex: this datatype is needed when using interupts on some microcontrolers like ESP32 and etc.
+pointer * : this datatypes 'points' to value at adress -- syntax: *variable
+& : adress of "smthing" -- syntax: &variable
+*reg : it points to the value at adress of register name stored in variable reg
+&DDRB : returns adress of DDRB register
 
+<h3>2. Complete the following table with C data types.</h3>
 
-## Lab prerequisites
+    | **Data type** | **Number of bits** | **Range** | **Description** |
+| :-: | :-: | :-: | :-- | 
+| `uint8_t`  | 8 | 0, 1, ..., 255 | Unsigned 8-bit integer |
+| `int8_t`   | 8 | -128...0...127 |Signed 8-bit integer|
+| `uint16_t` |  16 | 0..65535 |Unsigned 16-bit integer |
+| `int16_t`  |  16 | -65536...0...65535 |Signed 16-bit integer|
+| `float`    | 32 | -3.4e+38, ..., 3.4e+38 | Single-precision floating-point |
+| `void`     | x | x | keyword to use as a placeholder where you would put a data type, to represent "no data". |
+<h3> Complete the cone </h3>
 
-1. What is the meaning of `volatile` keyword in C? What is the difference between operators `*` and `&`, such as `*reg` and `&DDRB`?
+```C
+#include <avr/io.h>
 
-2. Complete the following table with C data types.
+// Function declaration (prototype)
+uint16_t calculate(uint8_t x, uint8_t y);
 
-    | **Data type** | **Number of bits** | **Range** |
-    | :-: | :-: | :-: |
-    | `uint8_t` | 8 | 0, 1, ..., 255 |
-    | `int8_t` | 8 | -128 ...0...127 |
-    | `uint16_t` | 16 | 0..65535 |
-    | `int16_t` | 16 | -65536...0...65535 |
-    | `float` | 32 | -3.4e+38, ..., 3.4e+38 |
-    | `void` |  |  |
+int main(void)
+{
+    uint8_t a = 156;
+    uint8_t b = 14;
+    uint16_t c;
 
-3. Use the [ATmega328P datasheet](https://www.microchip.com/wwwproducts/en/ATmega328p) and complete the following table with I/O ports. Let PUD (Pull-up Disable) bit in MCUCR (MCU Control Register) is 0 by default.
+    // Function call
+    c = calculate(a, b);
 
-    | **DDRB5** | **PORTB5** | **I/O** | **Pull-up** | **Description** |
-    | :-: | :-: | :-: | :-: | :-- |
-    | 0 | 0 | Input | No | Three-state, high impedance |
-    | 0 | 1 |  |  |  |
-    | 1 | 0 |  |  |  |
-    | 1 | 1 |  |  |  |
-
-
-## Used hardware components
-
-1. [ATmega328P](https://www.microchip.com/wwwproducts/en/ATmega328P) 8-bit AVR microcontroller.
-2. [Arduino Uno](../../Docs/arduino_shield.pdf) board.
-3. [300-pin breadboard](https://www.gme.cz/nepajive-kontaktni-pole-zy-60).
-4. [Male-male wires](https://arduino-shop.cz/arduino/1063-arduino-vodice-samec-samec-40-kusu-1500635966.html) for interconnections.
-
-
-## Synchronize Git and create a new project
-
-1. In Visual Studio Code editor (VS Code) open your Digital-electronics-2 working directory and [synchronize the contents](https://github.com/joshnh/Git-Commands) with GitHub.
-
-    ```bash
-    $ pwd
-    /home/lab661/Documents/your-name/Digital-electronics-2
-    $ git pull
-    ```
-
-2. Create a new folder `Labs/03-gpio` and copy three files from the last project.
-
-    ```bash
-    $ cd Labs/
-    $ mkdir 03-gpio
-    $ cp 02-leds/main.c 02-leds/Makefile 02-leds/README.md 03-gpio/
-    $ cd 03-gpio/
-    $ ls
-    main.c  Makefile  README.md
-    ```
-
-
-## Header file
-
-*[A function prototype](https://www.programiz.com/c-programming/c-user-defined-functions) is simply the declaration of a function that specifies function's name, parameters and return type. It doesn't contain function body. A function prototype gives information to the compiler that the function may later be used in the program.*
-
-1. Create a new library header file `library/Include/gpio.h` and define function prototypes according to the following table.
-
-    | **Return** | **Function name** | **Function parameters** |
-    | :-: | :-- | :-- |
-    | `void` | `GPIO_output` | `volatile uint8_t *reg, uint8_t pin` |
-    | `void` | `GPIO_write` | `volatile uint8_t *reg, uint8_t pin, uint8_t val` |
-    | `void` | `GPIO_toggle` | `volatile uint8_t *reg, uint8_t pin` |
-    | `void` | `GPIO_input_nopull` | `volatile uint8_t *reg, uint8_t pin` |
-    | `void` | `GPIO_input_pullup` | `volatile uint8_t *reg, uint8_t pin` |
-    | `uint8_t` | `GPIO_read` | `volatile uint8_t *reg, uint8_t pin` |
-
-2. Why is it necessary to use guard directives `#ifndef`, `#define`, `#endif` in header file?
-
-    ```C
-    #ifndef GPIO_H_INCLUDED
-    #define GPIO_H_INCLUDED
-
-    #include <avr/io.h>
-
-    void GPIO_output(volatile uint8_t *reg, uint8_t pin);
-    ...
-    
-    #endif /* GPIO_H_INCLUDED */
-    ```
-
-    > See [gpio header template](../library/Include/gpio.h) for complete list of declared functions.
-    >
-
-
-## Source file
-
-1. Create a source file `library/Source/gpio.c` and define all declared functions. See AVR Libc Reference Manual how to pass an [IO port as a parameter](https://www.microchip.com/webdoc/AVRLibcReferenceManual/FAQ_1faq_port_pass.html) to a function.
-
-    ```C
-    #include "gpio.h"
-
-    /* Configures one output pin */
-    void GPIO_output(volatile uint8_t *reg, uint8_t pin) {
-
-        *reg = *reg | _BV(pin);
+    while (1)
+    {
     }
-    ...
-    ```
+    return 0;
+}
 
-2. Add the source file of gpio library between the compiled files in `03-gpio/Makefile`.
+// Function definition (body)
+uint16_t calculate(uint8_t x, uint8_t y)
+{
+    uint16_t result;    // result = x^2 + 2xy + y^2
+    result = x*x+ 2*x*y + y*y;
+    return result;
+}
+```
 
-    ```Makefile
-    # Add or comment libraries you are using in the project
-    #SRCS += $(LIBRARY_DIR)/Source/lcd.c
-    #SRCS += $(LIBRARY_DIR)/Source/uart.c
-    #SRCS += $(LIBRARY_DIR)/Source/twi.c
-    SRCS += $(LIBRARY_DIR)/Source/gpio.c
-    ```
+<h2> Lab results </h2>
+<h3> <a href = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab3/lib/gpio/src/gpio.cpp"> gpio.cpp</a> <h3>
 
+```C
+/***********************************************************************
+ * 
+ * GPIO library for AVR-GCC.
+ * ATmega328P (Arduino Uno), 16 MHz, AVR 8-bit Toolchain 3.6.2
+ *
+ * Copyright (c) 2019-2020 Tomas Fryza
+ * Dept. of Radio Electronics, Brno University of Technology, Czechia
+ * This work is licensed under the terms of the MIT license.
+ *
+ **********************************************************************/
 
-## Final application
+/* Includes ----------------------------------------------------------*/
+#include "gpio.h"
 
-1. Rewrite the LED switching application from the previous exercise using the library functions. Do not forget to include gpio header file to your main application `#include "gpio.h"`.
+/* Function definitions ----------------------------------------------*/
+void GPIO_config_output(volatile uint8_t *reg_name, uint8_t pin_num)
+{
+    *reg_name = *reg_name | (1<<pin_num);
+}
 
-
-## Clean project and synchronize git
-
-1. Remove all binaries and object files from the working directory by command
-
-    ```bash
-    $ make clean
-    ```
-
-2. Use `cd ..` command in VS Code terminal and change the working directory to `Digital-electronics-2`. Then use [git commands](https://github.com/joshnh/Git-Commands) to add, commit, and push all local changes to your remote repository. Check the repository at GitHub web page for changes.
-
-    ```bash
-    $ pwd
-    /home/lab661/Documents/your-name/Digital-electronics-2/Labs/03-gpio
-
-    $ cd ..
-    $ cd ..
-    $ pwd
-    /home/lab661/Documents/your-name/Digital-electronics-2
-
-    $ git status
-    $ git add <your-modified-files>
-    $ git status
-    $ git commit -m "[LAB] Creating 03-gpio lab"
-    $ git status
-    $ git push
-    $ git status
-    ```
+/*--------------------------------------------------------------------*/
+void GPIO_config_input_nopull(volatile uint8_t *reg_name, uint8_t pin_num)
+{
+*reg_name = *reg_name | (1<<pin_num);
+*reg_name++;
+*reg_name = *reg_name | (1<<pin_num);
+}
 
 
-## Ideas for other tasks
+/*--------------------------------------------------------------------*/
+void GPIO_config_input_pullup(volatile uint8_t *reg_name, uint8_t pin_num)
+{
+    *reg_name = *reg_name & ~(1<<pin_num);  // Data Direction Register
+    *reg_name++;                            // Change pointer to Data Register setting PORT
+    *reg_name = *reg_name | (1<<pin_num);   // Data Register
+}
 
-1. Use basic [Goxygen commands](http://www.doxygen.nl/manual/docblocks.html#specialblock) inside C-code comments and prepare your `gpio.h` library for easy PDF manual generation.
+/*--------------------------------------------------------------------*/
+void GPIO_write_low(volatile uint8_t *reg_name, uint8_t pin_num)
+{
+    *reg_name = *reg_name & ~(1<<pin_num);
+}
+
+/*--------------------------------------------------------------------*/
+void GPIO_write_high(volatile uint8_t *reg_name, uint8_t pin_num)
+{
+   *reg_name = *reg_name | (1<<pin_num); 
+}
+
+
+/*--------------------------------------------------------------------*/
+void GPIO_toggle(volatile uint8_t *reg_name, uint8_t pin_num)
+{
+    *reg_name = *reg_name ^ (1<<pin_num);
+}
+
+
+/*--------------------------------------------------------------------*/
+uint8_t GPIO_read(volatile uint8_t *reg_name, uint8_t pin_num)
+{
+    if (bit_is_clear(*reg_name, pin_num))
+    {
+        return 0;
+
+    }
+    else
+    {
+        return 1;
+    }
+}
+
+```
+
+<h3> <a href = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab3/src/main.cpp"> main.cpp</a> <h3>
+
+```C
+#include <Arduino.h>
+
+/* Defines -----------------------------------------------------------*/
+#define LED_GREEN   PB5     // AVR pin where green LED is connected
+#define BLINK_DELAY 500
+#define BTN         PD5
+#define LED_RED     PB4
+#ifndef F_CPU
+#define F_CPU 16000000      // CPU frequency in Hz required for delay
+#endif
+
+/* Includes ----------------------------------------------------------*/
+#include <util/delay.h>     // Functions for busy-wait delay loops
+#include <avr/io.h>         // AVR device-specific IO definitions
+#include <gpio.h>          // GPIO library for AVR-GCC
+
+int main(void)
+{
+    /* GREEN LED */
+    GPIO_config_output(&DDRB, LED_GREEN);
+    GPIO_write_low(&PORTB, LED_GREEN);
+
+    /* RED LED */
+    GPIO_config_output(&DDRB, LED_RED);
+    GPIO_write_low(&PORTB, LED_RED);
+
+    /* push button */
+    GPIO_config_input_pullup(&DDRD, BTN);
+
+    // Infinite loop
+    while (1)
+    {
+        // Pause several milliseconds
+        _delay_ms(BLINK_DELAY);
+        if (!GPIO_read(&PIND,BTN))
+        {
+          GPIO_toggle(&PORTB,LED_GREEN);//toggle leds
+          GPIO_toggle(&PORTB,LED_RED);
+        }
+        if (GPIO_read(&PIND,BTN))
+        {
+          GPIO_write_low(&PORTB,LED_GREEN);//turn off if button isnt pushed
+          GPIO_write_low(&PORTB,LED_RED);
+        }
+
+    }
+
+    // Will never reach this
+    return 0;
+}
+```
+<h3> Declaration vs definition of fucntion</h3>
+<p> Declaration means, that you create "variable (function)", by doing that, this fucnction can be called in your code, but does nothing.
+Definition of function means, that you create an algorith, that will be executed, when function is called. Examples of these are in main.cpp (here you call functions), in gpio.h (here you declare functions) and in gpio.cpp(here you define functions).</p>
