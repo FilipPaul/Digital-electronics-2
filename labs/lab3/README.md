@@ -21,10 +21,10 @@
     | **Data type** | **Number of bits** | **Range** |
     | :-: | :-: | :-: |
     | `uint8_t` | 8 | 0, 1, ..., 255 |
-    | `int8_t` |  |  |
-    | `uint16_t` |  |  |
-    | `int16_t` |  |  |
-    | `float` |  | -3.4e+38, ..., 3.4e+38 |
+    | `int8_t` | 8 | -128 ...0...127 |
+    | `uint16_t` | 16 | 0..65535 |
+    | `int16_t` | 16 | -65536...0...65535 |
+    | `float` | 32 | -3.4e+38, ..., 3.4e+38 |
     | `void` |  |  |
 
 3. Use the [ATmega328P datasheet](https://www.microchip.com/wwwproducts/en/ATmega328p) and complete the following table with I/O ports. Let PUD (Pull-up Disable) bit in MCUCR (MCU Control Register) is 0 by default.
