@@ -1,4 +1,5 @@
 <h1> Lab 3 </h1>
+<p>Because i'm using PlatformIO platform for compiling and uploading code into Arduino, my library files are located <a href="https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab3/lib/gpio/src">here</a> and main.cpp<a href="https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab3/src/main.cpp">here</a>
 
 <h2> Preparation tasks </h2>
 
