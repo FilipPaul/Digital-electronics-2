@@ -38,3 +38,199 @@
 |                | OC1B | PB2 | 10 |
 | Timer/Counter2 | OC2A | PB3 | 11 |
 |                | OC2B | PD3 | 3 |
+
+<h2> Source code</h2>
+<h3> Timer.h </h3>
+
+```c
+#ifndef TIMER_H
+#define TIMER_H
+
+/***********************************************************************
+ * 
+ * Timer library for AVR-GCC.
+ * ATmega328P (Arduino Uno), 16 MHz, AVR 8-bit Toolchain 3.6.2
+ *
+ * Copyright (c) 2019-2020 Tomas Fryza
+ * Dept. of Radio Electronics, Brno University of Technology, Czechia
+ * This work is licensed under the terms of the MIT license.
+ *
+ **********************************************************************/
+
+/*
+ * @file  timer.h
+ * @brief Timer library for AVR-GCC.
+ *
+ * @details
+ * The library contains macros for controlling the timer modules.
+ *
+ * @note
+ * Based on Microchip Atmel ATmega328P manual and no source file is 
+ * needed for the library.
+ * 
+ * @copyright (c) 2019-2020 Tomas Fryza
+ * Dept. of Radio Electronics, Brno University of Technology, Czechia
+ * This work is licensed under the terms of the MIT license.
+ */
+
+/* Includes ----------------------------------------------------------*/
+#include <avr/io.h>
+//---------------------Timer 1 ------------------------------------------------------------
+/* Defines -----------------------------------------------------------*/
+/*
+ * @brief Defines prescaler CPU frequency values for Timer/Counter1.
+ * @note  F_CPU = 16 MHz
+ */
+
+#define TIM1_stop()             TCCR1B &= ~((1<<CS12) | (1<<CS11) | (1<<CS10));
+#define TIM1_overflow_4ms()     TCCR1B &= ~((1<<CS12) | (1<<CS11)); TCCR1B |= (1<<CS10);
+#define TIM1_overflow_33ms()    TCCR1B &= ~((1<<CS12) | (1<<CS10)); TCCR1B |= (1<<CS11);
+#define TIM1_overflow_262ms()   TCCR1B &= ~(1<<CS12); TCCR1B |= (1<<CS11) | (1<<CS10);
+#define TIM1_overflow_1s()      TCCR1B &= ~((1<<CS11) | (1<<CS10)); TCCR1B |= (1<<CS12);
+#define TIM1_overflow_4s()      TCCR1B &= ~(1<<CS11); TCCR1B |= (1<<CS12) | (1<<CS10);
+
+/*
+ * @brief Defines interrupt enable/disable modes for Timer/Counter1.
+ */
+#define TIM1_overflow_interrupt_enable()    TIMSK1 |= (1<<TOIE1);
+#define TIM1_overflow_interrupt_disable()   TIMSK1 &= ~(1<<TOIE1);
+
+//---------------------Timer 0 ------------------------------------------------------------
+/* Defines -----------------------------------------------------------*/
+/*
+ * @brief Defines prescaler CPU frequency values for Timer/Counter0.
+ * @note  F_CPU = 16 MHz
+ */
+
+#define TIM0_stop()             TCCR0B &= ~((1<<CS02) | (1<<CS01) | (1<<CS00));//000
+#define TIM0_overflow_16us()     TCCR0B &= ~((1<<CS02) | (1<<CS01)); TCCR0B |= (1<<CS00);//001
+#define TIM0_overflow_128us()    TCCR0B &= ~((1<<CS02) | (1<<CS00)); TCCR0B |= (1<<CS01);//010
+#define TIM0_overflow_1024us()   TCCR0B &= ~(1<<CS02); TCCR0B |= (1<<CS01) | (1<<CS00);//011
+#define TIM0_overflow_4096us()      TCCR0B &= ~((1<<CS01) | (1<<CS00)); TCCR0B |= (1<<CS02);//100
+#define TIM0_overflow_16384us()      TCCR0B &= ~(1<<CS01); TCCR0B |= (1<<CS02) | (1<<CS00);//101
+
+/*
+ * @brief Defines interrupt enable/disable modes for Timer/Counter0.
+ */
+#define TIM0_overflow_interrupt_enable()    TIMSK0 |= (1<<TOIE0);
+#define TIM0_overflow_interrupt_disable()   TIMSK0 &= ~(1<<TOIE0);
+
+//---------------------Timer 2 ------------------------------------------------------------
+/* Defines -----------------------------------------------------------*/
+/*
+ * @brief Defines prescaler CPU frequency values for Timer/Counter2.
+ * @note  F_CPU = 16 MHz
+ */
+
+#define TIM2_stop()                 TCCR2B &= ~((1<<CS22) | (1<<CS21) | (1<<CS20));//000
+#define TIM2_overflow_16us()        TCCR2B &= ~((1<<CS22) | (1<<CS21)); TCCR2B |= (1<<CS20);//001
+#define TIM2_overflow_128us()       TCCR2B &= ~((1<<CS22) | (1<<CS20)); TCCR2B |= (1<<CS21);//010
+#define TIM2_overflow_512us()       TCCR2B &= ~(1<<CS22); TCCR2B |= (1<<CS21) | (1<<CS20);//011
+#define TIM2_overflow_1024us()      TCCR2B &= ~((1<<CS21) | (1<<CS20)); TCCR2B |= (1<<CS22);//100
+#define TIM2_overflow_2048us()      TCCR2B &= ~(1<<CS21); TCCR2B |= (1<<CS22) | (1<<CS20);//101
+#define TIM2_overflow_4096us()      TCCR2B &= ~(1<<CS20); TCCR2B |= (1<<CS22)|(1<<CS21); //110
+#define TIM2_overflow_16384us()     TCCR2B |= (1<<CS22)|(1<<CS21) | (1<<CS20);           //111
+
+
+/*
+ * @brief Defines interrupt enable/disable modes for Timer/Counter2.
+ */
+#define TIM2_overflow_interrupt_enable()    TIMSK2 |= (1<<TOIE2);
+#define TIM2_overflow_interrupt_disable()   TIMSK2 &= ~(1<<TOIE2);
+
+#endif
+
+```
+
+<h3> main.cpp </h3>
+
+```c
+#include <Arduino.h>
+/***********************************************************************
+ * 
+ * Control LEDs using functions from GPIO and Timer libraries. Do not 
+ * use delay library any more.
+ * ATmega328P (Arduino Uno), 16 MHz, AVR 8-bit Toolchain 3.6.2
+ *
+ * Copyright (c) 2018-2020 Tomas Fryza
+ * Dept. of Radio Electronics, Brno University of Technology, Czechia
+ * This work is licensed under the terms of the MIT license.
+ * 
+ **********************************************************************/
+
+/* Defines -----------------------------------------------------------*/
+#define LED_D1  PB5
+#define LED_D2  PB4
+#define LED_D3  PB3
+
+/* Includes ----------------------------------------------------------*/
+#include <avr/io.h>         // AVR device-specific IO definitions
+#include <avr/interrupt.h>  // Interrupts standard C library for AVR-GCC
+#include "gpio.h"           // GPIO library for AVR-GCC
+#include "timer.h"          // Timer library for AVR-GCC
+
+
+/* Function definitions ----------------------------------------------*/
+/*
+ * Main function where the program execution begins. Toggle three LEDs
+ * on Multi-function shield with internal 8- and 16-bit timer modules.
+ */
+int main(void)
+{
+    /* Configuration of three LEDs */
+    GPIO_config_output(&DDRB, LED_D2);
+    GPIO_write_low(&PORTB, LED_D2);
+
+    GPIO_config_output(&DDRB, LED_D1);
+    GPIO_write_low(&PORTB, LED_D1);
+
+    GPIO_config_output(&DDRB, LED_D3);
+    GPIO_write_low(&PORTB, LED_D3);
+    // WRITE YOUR CODE HERE
+
+    /* Configuration of 8-bit Timer/Counter0 */
+    TIM0_overflow_4096us();
+    TIM0_overflow_interrupt_enable();
+
+    /* Configuration of 16-bit Timer/Counter1
+     * Set prescaler and enable overflow interrupt */
+    TIM1_overflow_262ms();
+    TIM1_overflow_interrupt_enable();
+
+    /* Configuration of 8-bit Timer/Counter2 */
+    TIM2_overflow_16384us();
+    TIM2_overflow_interrupt_enable();
+
+    // Enables interrupts by setting the global interrupt mask
+    sei();
+
+    // Infinite loop
+    while (1)
+    {
+        /* Empty loop. All subsequent operations are performed exclusively 
+         * inside interrupt service routines ISRs */
+    }
+
+    // Will never reach this
+    return 0;
+}
+
+/* Interrupt service routines ----------------------------------------*/
+/**
+ * ISR starts when Timer/Counter1 overflows. Toggle LED D2 on 
+ * Multi-function shield. */
+ISR(TIMER1_OVF_vect)
+{
+    GPIO_toggle(&PORTB,LED_D1);
+}
+ISR(TIMER2_OVF_vect)
+{
+   GPIO_toggle(&PORTB,LED_D2); 
+}
+ISR(TIMER0_OVF_vect)
+{
+   GPIO_toggle(&PORTB,LED_D3); 
+}
+
+```
+<h3> Simulation </h3>
