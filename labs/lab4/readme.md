@@ -236,8 +236,8 @@ ISR(TIMER0_OVF_vect)
 <h3> Simulation </h3>
 <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab4/pictures/simulation.gif">
 <h3> Answers to questions </h3>
-ISR() is function, that is called whenever specific condition meets interupts condition, input of this function is predefined vector, that defines type of interupt. For EX: ISR(TIMER0_OVF_vect) execute its code whenever Timer 1 overflow. This function is called asynchronously. <br>
-Common C function is called from source code from line, where the function is called. This function is called synchronously.<br>
-Clear Timer on Compare - this method counts into given number of Timer, if the number of counts is equal to our given number ,it resets counter value and start again from 0. We can define what should be executed in ISR function.<br>
-Fast PWM modes, uses Timers for changing automaticaly logical levels at GPIOs without calling ISR function from script.
+<b>ISR()</b> is function that is called whenever specific condition meets interupts condition, input of this function is predefined vector, that defines type of interupt. For EX: ISR(TIMER0_OVF_vect) execute its code whenever Timer 1 overflow. This function is called asynchronously. <br>
+<b>Common C function</b> is called from source code from line, where the function is called. This function is called synchronously.<br>
+<b>Clear Timer on Compare</b> - this method counts into given number of Timer, if the number of counts is equal to our given number ,it resets counter value and start again from 0. We can define what should be executed in ISR function.<br>
+<b>Fast PWM modes</b>, uses Timers for changing automaticaly logical levels at GPIOs without calling ISR function from script.
 
