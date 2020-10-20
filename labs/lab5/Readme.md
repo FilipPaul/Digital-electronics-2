@@ -1,5 +1,5 @@
 <h1> Lab 5 </h1>
-<h2> Preparation Task
+<h2> Preparation Task</h2>
 <ul>
    <li>Common Cathode 7-segment display (CC SSD) - active HIGH</li> 
    <li>* Common Anode 7-segment display (CA SSD) - active LOW</li> 
