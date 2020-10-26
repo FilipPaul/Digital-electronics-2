@@ -48,6 +48,7 @@ ISR(TIMER1_OVF_vect)
         segment[7] = 0;      
     } 
 }
+// multiplexing digits
 ISR(TIMER2_OVF_vect){
     if (muxflag == 1){
     SEG_update_shift_regs(segment[7], 7);

@@ -1,32 +1,3 @@
-<h1> Lab 5 </h1>
-<h2> Preparation Task</h2>
-<ul>
-   <li>Common Cathode 7-segment display (CC SSD) - active HIGH</li> 
-   <li>* Common Anode 7-segment display (CA SSD) - active LOW</li> 
- </ul>  
-
-<p>In the following table, write the binary values of the segments for display 0 to 9 on a common anode 7-segment display.</p>
-
-   | **Digit** | **A** | **B** | **C** | **D** | **E** | **F** | **G** | **DP** |
-   | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-   | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 |
-   | 1 | 1 | 0 | 0 | 1 | 1 | 1 | 1 | 1 |
-   | 2 | 0 | 0 | 1 | 0 | 0 | 1 | 0 | 1 |
-   | 3 | 0 | 0 | 0 | 0 | 1 | 1 | 0 | 1 |
-   | 4 | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 1 |
-   | 5 | 0 | 1 | 0 | 0 | 1 | 0 | 0 | 1 |
-   | 6 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 1 |
-   | 7 | 0 | 0 | 0 | 1 | 1 | 1 | 1 | 1 |
-   | 8 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-   | 9 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 1 |
-   
-   <p>Use schematic of the Multi-function shield and find out the connection of seven-segment display. What is the purpose of two shift registers 74HC595? <br>
-   Shift registers are used for creating more output pins, this component alow us to create (8 output pins for each register) using only 3 wires (CLK, LATCH and Data), more registers can be connected in series where Q7' of first shift register is connected to data pin of second shift register</p>
-
-   <h2> Lab Results </h2>
-   <h3> segment.cpp </h3>
-
-```c
 /*
  * 
  * Seven-segment display library for AVR-GCC.
@@ -43,7 +14,16 @@
 #include <util/delay.h>
 #include "gpio.h"
 #include "segment.h"
-
+uint8_t snake_values[]={
+    0b01111111,
+    0b10111111,
+    0b11011111,
+    0b11101111,
+    0b11110111,
+    0b11111011,
+    0b11111101,
+    0b11111110,
+};
 uint8_t segment_values[]={
     0b00000011, // digit 0
     0b10011111, // digit 1
@@ -202,123 +182,9 @@ void SEG_clk()
     // Wait 1 us
     _delay_us(1);
 }
-```
-
-<h3> main.cpp</h3>
-
-```c
-#include <avr/io.h>         // AVR device-specific IO definitions
-#include <avr/interrupt.h>  // Interrupts standard C library for AVR-GCC
-#include "timer.h"          // Timer library for AVR-GCC
-#include "segment.h"        // Seven-segment display library for AVR-GCC
-#include "gpio.h"
-#include <Arduino.h>
-uint8_t segment[] = {0,0,0,0,0,0,0,0}; // initial value
-uint8_t muxflag = 1; // variable for multiplexing digits
-
-int main(void)
-{
-    // timer for multiplexing
-    TIM2_overflow_512us(); // 512us for each digit
-    TIM2_overflow_interrupt_enable();
-
-    // Configure SSD signals
-    SEG_init();
-    TIM1_overflow_262ms() ;
-    TIM1_overflow_interrupt_enable();
-    sei();
-    // Infinite loop
-    while (1)
-    {
-
-    // Will never reach this    
-    }
-    return 0;
-}
-
-/* Interrupt service routines ----------------------------------------*/
-ISR(TIMER1_OVF_vect)
-{
-
-    if(segment[7] == 9){
-      segment[6] = segment[6] + 1;
-      segment[7] = 0;
-    }
-
-    else
-    {
-        segment[7] = segment[7] + 1;
-    }
-
-    if(segment[6] == 6){  
-        segment[6] = 0;  
-        segment[7] = 0;      
-    } 
-}
-// multiplexing digits
-ISR(TIMER2_OVF_vect){ 
-    if (muxflag == 1){
-    SEG_update_shift_regs(segment[7], 7);
-    }
-    else
-    {
-     SEG_update_shift_regs(segment[6], 6); 
-    }
-    muxflag = !muxflag; // 
-    
-}
-``` 
-  <h3> Simulation </h3>
-  <src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab5/pictures/simulation.gif">
-  <br>
-
-  <h3> Snake.cpp </h3>
-
-  ```cpp
-  #include <avr/io.h>         // AVR device-specific IO definitions
-#include <avr/interrupt.h>  // Interrupts standard C library for AVR-GCC
-#include "timer.h"          // Timer library for AVR-GCC
-#include "segment.h"        // Seven-segment display library for AVR-GCC
-#include "gpio.h"
-#include <Arduino.h>
-int main(void)
-{
-   // Configure SSD signals
-    SEG_init();
- 
-
-    while (1)
-    {
-      for (size_t i = 0; i < 6; i++)
-      {
-        my_snake(i,7);
-        _delay_ms(400);
-      }
-      
-     
-    // Will never reach this    
-    }
-    return 0;
-}
 
 
-  ``` 
 
-   <h3> segment.cpp </h3>
-   I added In file segment.cpp following lines.
-
-   ```cpp
-
-   uint8_t snake_values[]={
-    0b01111111,
-    0b10111111,
-    0b11011111,
-    0b11101111,
-    0b11110111,
-    0b11111011,
-    0b11111101,
-    0b11111110,
-};
 void my_snake(uint8_t segments, uint8_t position)
 {   uint8_t segment_value = snake_values[segments];
     uint8_t position_value = segment_positions[position];
@@ -392,9 +258,4 @@ void my_snake(uint8_t segments, uint8_t position)
     // Wait 1 us
     _delay_us(1);
 }
-
-   ``` 
-   <h3> Snake Simulation </h3>
-  <src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab5/pictures/snakesimulation.gif">
-  <br>
 
