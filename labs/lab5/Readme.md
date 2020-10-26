@@ -269,7 +269,7 @@ ISR(TIMER2_OVF_vect){
 }
 ``` 
   <h3> Simulation </h3>
-  <src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab5/pictures/simulation.gif">
+  <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab5/pictures/simulation.gif">
   <br>
 
   <h3> Snake.cpp </h3>
@@ -395,6 +395,7 @@ void my_snake(uint8_t segments, uint8_t position)
 
    ``` 
    <h3> Snake Simulation </h3>
-  <src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab5/pictures/snakesimulation.gif">
+  <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab5/pictures/snakesimulation.gif">
+
   <br>
 
