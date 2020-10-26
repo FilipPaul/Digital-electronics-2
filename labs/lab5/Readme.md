@@ -205,6 +205,7 @@ void SEG_clk()
 ```
 
 <h3> main.cpp</h3>
+
 ```c
 #include <avr/io.h>         // AVR device-specific IO definitions
 #include <avr/interrupt.h>  // Interrupts standard C library for AVR-GCC
