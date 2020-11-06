@@ -35,7 +35,7 @@ ASCII table is a way how to describe characters with numbers in DEC, BIN, HEX et
 <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab6/pictures/message.jpg">
 
 <h3> Simulation </h3>
-<img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab6/pictures/simulation.png">
+<img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab6/pictures/simulation.PNG">
 
 <h3> main.cpp</h3>
 <br>
