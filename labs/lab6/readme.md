@@ -15,7 +15,7 @@ ASCII table is a way how to describe characters with numbers in DEC, BIN, HEX et
 <br>
 <h3>ASCII table </h3>
 
-<img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab6/pictures/ASCII.png">
+<img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab6/pictures/ASCII.PNG">
 
 
 
