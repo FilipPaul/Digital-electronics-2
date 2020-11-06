@@ -32,7 +32,7 @@ ASCII table is a way how to describe characters with numbers in DEC, BIN, HEX et
    | `lcd_data` | uint8_t data | Send data byte to LCD controller. | `lcd_data(data);`|
 
 <h3> HD44780 communication, message: DE2</h3>
-<img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab6/pictures/message.PNG">
+<img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab6/pictures/message.jpg">
 
 ## Lab assignment
 
