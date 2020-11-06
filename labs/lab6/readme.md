@@ -40,7 +40,7 @@ ASCII table is a way how to describe characters with numbers in DEC, BIN, HEX et
 <h3> main.cpp</h3>
 <br>
 
-``cpp
+```cpp
 
 /* Includes ----------------------------------------------------------*/
 #include <Arduino.h>
@@ -242,6 +242,7 @@ ISR(TIMER2_OVF_vect)
         number_of_overflows = 0;
     }
 }
-``
+
+```
 
 
