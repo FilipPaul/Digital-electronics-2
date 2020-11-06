@@ -62,11 +62,11 @@ In the lab, we are using [LCD library for HD44780 based LCDs](http://www.peterfl
 
    | **Function name** | **Function parameters** | **Description** | **Example** |
    | :-- | :-- | :-- | :-- |
-   | `lcd_init` | `LCD_DISP_OFF`<br>`LCD_DISP_ON`<br>`LCD_DISP_ON_CURSOR`<br>`LCD_DISP_ON_CURSOR_BLINK` | Display off <br>
-   Display ON,cursor off <br>
-   Display on, cursor on <br>
-   Display on, cursor on, blink char &nbsp;
-   &nbsp;<br>&nbsp; | `lcd_init(LCD_DISP_OFF);`<br>&nbsp;<br>&nbsp;<br>&nbsp; |
+   | `lcd_init` | `LCD_DISP_OFF`<br>`LCD_DISP_ON`<br>`LCD_DISP_ON_CURSOR`<br>`LCD_DISP_ON_CURSOR_BLINK` | Display off &nbsp;
+   Display ON,cursor off &nbsp;
+   Display on, cursor on &nbsp;
+   Display on, cursor on, blink char &nbsp;<br>&nbsp;<br>&nbsp;<br>&nbsp;
+  | `lcd_init(LCD_DISP_OFF);`<br>&nbsp;<br>&nbsp;<br>&nbsp; |
    | `lcd_clrscr` | | | `lcd_clrscr();` |
    | `lcd_gotoxy` | | | |
    | `lcd_putc` | | | |
