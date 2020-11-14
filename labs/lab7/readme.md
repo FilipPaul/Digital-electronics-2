@@ -8,13 +8,14 @@ When none of pushbutton is pressed the voltage is 5V
 
    | **Push button** | **PC0[A0] voltage** | **ADC value (calculated)** | **ADC value (measured)** |
    | :-: | :-: | :-: | :-: |
-   | Right  | 0&nbsp;V | 0   |  |
-   | Up     | 0.495&nbsp;V | 101 |  |
-   | Down   | 1.203&nbsp;V | 246 |  |
-   | Left   | 1.970&nbsp;V | 403 |  |
-   | Select | 3.182&nbsp;V | 651 |  |
-   | none   | 5&nbsp;V | 1023 |  |
+   | Right  | 0&nbsp;V | 0   | 0 |
+   | Up     | 0.495&nbsp;V | 101 | 101 |
+   | Down   | 1.203&nbsp;V | 246 | 245 |
+   | Left   | 1.970&nbsp;V | 403 | 402 |
+   | Select | 3.182&nbsp;V | 651 | 650 |
+   | none   | 5&nbsp;V | 1023 | 1022 |
 
+<h2> ADC</h2>
 
    | **Operation** | **Register(s)** | **Bit(s)** | **Description** |
    | :-: | :-- | :-- | :-- |
@@ -22,8 +23,8 @@ When none of pushbutton is pressed the voltage is 5V
    | Input channel | ADMUX | MUX3:0 | see fig. bellow |
    | ADC enable | ADCSRA | 7-ADEN | if 1: enable |
    | Start conversion | ADSCRA | 6-ADSC |  write this bit to one to start each conversion. In free running mode, write this bit to one to start the first conversion |
-   | ADC interrupt enable | ADSCRA | 3-ADIE | When this bit is written to one and the I-bit in SREG is set, the ADC conversion complete interrupt is activated. |
-   | ADC clock prescaler | ADSCRA | ADPS2:0 | see fig. bellow |
+   | ADC interrupt enable | ADCSRA | 3-ADIE | When this bit is written to one and the I-bit in SREG is set, the ADC conversion complete interrupt is activated. |
+   | ADC clock prescaler | ADCSRA | ADPS2:0 | see fig. bellow |
    | ADC result | ADCL and ADCH (depends on ADLAR) | ADC9:0 | result |
 
   <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab7/pictures/MUX.PNG">
@@ -31,105 +32,14 @@ When none of pushbutton is pressed the voltage is 5V
   <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab7/pictures/Prescaler.PNG"> 
 
 
-### Version: Atmel Studio 7
-
-Create a new GCC C Executable Project for ATmega328P within `07-uart` working folder and copy/paste [template code](main.c) to your `main.c` source file.
-
-In **Solution Explorer** click on the project name, then in menu **Project**, select **Add Existing Item... Shift+Alt+A** and add:
-   * UART files [`uart.h`](../library/include/uart.h), [`uart.c`](../library/uart.c) from `Examples/library/include` and `Examples/library` folders,
-   * LCD library files `lcd.h`, `lcd_definitions.h`, `lcd.c` from the previous labs,
-   * Timer library `timer.h` from the previous labs.
-
-
-### Version: Command-line toolchain
-
-Copy `main.c` and `Makefile` files from previous lab to `Labs/07-uart` folder.
-
-Copy/paste [template code](main.c) to your `07-uart/main.c` source file.
-
-Add the source files of UART and LCD libraries between the compiled files in `07-uart/Makefile`.
-
-```Makefile
-# Add or comment libraries you are using in the project
-SRCS += $(LIBRARY_DIR)/lcd.c
-SRCS += $(LIBRARY_DIR)/uart.c
-#SRCS += $(LIBRARY_DIR)/twi.c
-#SRCS += $(LIBRARY_DIR)/gpio.c
-#SRCS += $(LIBRARY_DIR)/segment.c
-```
-
-
-### Both versions
-
-Compile the template code and download to Arduino Uno board or load `*.hex` firmware to SimulIDE circuit (create an identical connection to the LCD keypad shield).
-
-![SimulIDE](Images/screenshot_simulide_lcd_probe.png)
-
-In `main.c` configure ADC as follows:
-   * voltage reference: AVcc with external capacitor,
-   * input channel: ADC0,
-   * clock prescaler: 128,
-   * enable ADC module, and
-   * enable interrupt
-
-Use single conversion mode and start each conversion every second (use Timer/Counter1 overflow).
-
-Read the voltage level when a push button is pressed and display it in decimal at LCD display position `a`. Display the same value but in hexadecimal at position `b`. Note that you can use the 16-bit ADC variable, which is declared in the AVR library, to read the value from both converter registers ADCH:L.
-
-```c
-/**
- * ISR starts when ADC completes the conversion. Display value on LCD
- * and send it to UART.
- */
-ISR(ADC_vect)
-{
-    uint16_t value = 0;
-    char lcd_string[4] = "0000";
-
-    value = ADC;    // Copy ADC result to 16-bit variable
-    itoa(value, lcd_string, 10);    // Convert decimal value to string
-    ...
-```
-
-Write the values to the table from Preparation tasks section and compare them with the calculated ones.
-
-![SimulIDE](Images/screenshot_simulide_lcd_buttons.png)
-
-
-## Part 3: UART communication
-
-The UART (Universal Asynchronous Receiver-Transmitter) is not a communication protocol like SPI and I2C, but a physical circuit in a microcontroller, or a stand-alone integrated circuit, that translates communicated data between serial and parallel forms. It is one of the simplest and easiest method for implement and understanding.
-
-In UART communication, two UARTs communicate directly with each other. The transmitting UART converts parallel data from a CPU into serial form, transmits it in serial to the receiving UART, which then converts the serial data back into parallel data for the receiving device. Only two wires are needed to transmit data between two UARTs. Data flows from the Tx pin of the transmitting UART to the Rx pin of the receiving UART [[4]](https://www.circuitbasics.com/basics-uart-communication/).
-
-UARTs transmit data asynchronously, which means there is no external clock signal to synchronize the output of bits from the transmitting UART. Instead, timing is agreed upon in advance between both units, and special **Start** (log. 0) and 1 or 2 **Stop** (log. 1) bits are added to each data package. These bits define the beginning and end of the data packet so the receiving UART knows when to start reading the bits. In addition to the start and stop bits, the packet/frame also contains data bits and optional parity.
-
-The amount of **data** in each packet can be set from 5 to 9 bits. If it is not otherwise stated, data is transferred least-significant bit (LSB) first.
-
-**Parity** is a form of very simple, low-level error checking and can be Even or Odd. To produce the parity bit, add all 5-9 data bits and extend them to an even or odd number. For example, assuming parity is set to even and was added to a data byte `0110_1010`, which has an even number of 1's (4), the parity bit would be set to 0. Conversely, if the parity mode was set to odd, the parity bit would be 1.
-
-One of the most common UART formats is called **9600 8N1**, which means 8 data bits, no parity, 1 stop bit and a symbol rate of 9600&nbsp;Bd.
-
-![UART frame 8N1](Images/uart_frame_8n1.png)
-
-> Let the following image shows one frame of UART communication transmitting from the ATmega328P in 8N1 mode. What ASCII code/character does it represent? According to bit period, estimate the symbol rate.
->
-   &nbsp;
-   ![Timing of UART](Images/uart_capture_E.png)
-
-> 8N1 means that 8 data bits are transmitted, no parity is used, and the number of stop bits is one. Because the frame always starts with a low level start bit and the order of the data bits is from LSB to MSB, the data transmitted bu UART is therefore `0100_0101` (0x45) and according to the [ASCII](http://www.asciitable.com/) (American Standard Code for Information Interchange) table, it represents the letter `E`.
->
-> The figure further shows that the bit period, i.e. the duration of one bit, is 104&nbsp;us. The symbol rate of the communication is thus 1/104e-6 = 9615, i.e. approximately 9600&nbsp;Bd.
->
-
-In the lab, we are using [UART library](http://www.peterfleury.epizy.com/avr-software.html) developed by Peter Fleury. Use online manual of UART library and add the input parameters and description of the functions to the following table.
+<h2> UART</h2>
 
    | **Function name** | **Function parameters** | **Description** | **Example** |
    | :-- | :-- | :-- | :-- |
    | `uart_init` | `UART_BAUD_SELECT(9600, F_CPU)` | Initialize UART to 8N1 and set baudrate to 9600&nbsp;Bd | `uart_init(UART_BAUD_SELECT(9600, F_CPU));` |
-   | `uart_getc` |  |  |
-   | `uart_putc` |  |  |
-   | `uart_puts` |  |  |
+   | `uart_getc` | - | Returns in the lower byte the received character and in the higher byte the last receive error. UART_NO_DATA is returned when no data is available |`uart_getc()` |
+   | `uart_putc` | unsigned char data | data	byte to be transmitted | `uart_putc(unsigned char data)` |
+   | `uart_puts` | const char* s | s string to be transmitted | `uart_puts(const char* s)`|
 
 Extend the application from the previous point and send information about the results of the analog to digital conversion to the UART transmitter. Use internal UART module in 9600 8N1 mode.
 
