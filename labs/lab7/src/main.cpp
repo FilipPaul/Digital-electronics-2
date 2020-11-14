@@ -56,7 +56,7 @@ int main(void)
     TIM1_overflow_interrupt_enable();
 
     // Initialize UART to asynchronous, 8N1, 9600
-
+    uart_init(UART_BAUD_SELECT(9600,F_CPU));
 
     // Enables interrupts by setting the global interrupt mask
     sei();
@@ -102,13 +102,16 @@ ISR(ADC_vect)
     lcd_puts("    ");
     lcd_gotoxy(13,0);
     lcd_puts("    ");
-    }
-
     itoa(value, lcd_string, 10);    // Convert decimal value to string
     lcd_gotoxy(8,0);
     lcd_puts(lcd_string);
     itoa(value, lcd_string, 16);
     lcd_gotoxy(13,0);
     lcd_puts(lcd_string);
+    //print data to serial in HEX monitor via UART
+    uart_puts("button pressed: ");
+    uart_puts(lcd_string); 
+    uart_puts("\n");
+    }
     pre_value = value;
 }
