@@ -21,8 +21,7 @@ When none of pushbutton is pressed the voltage is 5V
    | Voltage reference | ADMUX | REFS1:0 | 01: AVcc voltage reference, 5V |
    | Input channel | ADMUX | MUX3:0 | see fig. bellow |
    | ADC enable | ADCSRA | 7-ADEN | if 1: enable |
-   | Start conversion | ADSCRA | 6-ADSC |  write this bit to one to start each conversion. In free running mode, write this bit to one to start the
-first conversion |
+   | Start conversion | ADSCRA | 6-ADSC |  write this bit to one to start each conversion. In free running mode, write this bit to one to start the first conversion |
    | ADC interrupt enable | ADSCRA | 3-ADIE | When this bit is written to one and the I-bit in SREG is set, the ADC conversion complete interrupt is activated. |
    | ADC clock prescaler | ADSCRA | ADPS2:0 | see fig. bellow |
    | ADC result | ADCL and ADCH (depends on ADLAR) | ADC9:0 | result |
