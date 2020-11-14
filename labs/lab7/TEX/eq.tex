@@ -1,0 +1,32 @@
+\documentclass[10pt, a4paper]{article}% size of txt = 10pt
+\usepackage[top= 2cm,
+			bottom = 2cm,
+			left = 1.7cm,
+			right = 1.7cm,
+			footskip = 0.5cm,
+			headsep = 0cm,
+			headheight = 0cm
+					]{geometry}
+\usepackage{amsmath} % math packages
+\usepackage{amsfonts}% math packages
+\usepackage{amssymb} % math packages
+\usepackage{graphicx} %package for including graphics
+\usepackage{array}
+\usepackage[thinlines]{easytable}
+\usepackage{float}
+\usepackage[section]{placeins}
+\usepackage[hidelinks]{hyperref}
+\usepackage[shortlabels]{enumitem}
+\usepackage{svg}
+
+\begin{document}
+\begin{equation}
+\begin{split}
+&V_{PC0[A_0]}(Right) = 5V\cdot \dfrac{0}{R_2 + 0 } = 0V\\
+&V_{PC0[A_0]}(Up) = 5V\cdot \dfrac{330\Omega}{330\Omega + 3k\Omega } = 0.495V\\
+&V_{PC0[A_0]}(Down) = 5V\cdot \dfrac{950\Omega}{950 + 3k\Omega } = 1.203V\\
+&V_{PC0[A_0]}(Left) = 5V\cdot \dfrac{1950\Omega}{1950\Omega + 3k\Omega } = 1.970V\\
+&V_{PC0[A_0]}(Select) = 5V\cdot \dfrac{5250\Omega}{5250\Omega + 3k\Omega } = 3.182V\\
+\end{split}
+\end{equation}
+\end{document}
