@@ -19,12 +19,17 @@ When none of pushbutton is pressed the voltage is 5V
    | **Operation** | **Register(s)** | **Bit(s)** | **Description** |
    | :-: | :-- | :-- | :-- |
    | Voltage reference | ADMUX | REFS1:0 | 01: AVcc voltage reference, 5V |
-   | Input channel |  | MUX3:0 | 0000: ADC0, 0001: ADC1, ... |
-   | ADC enable | ADCSRA |  |  |
-   | Start conversion |  |  |  |
-   | ADC interrupt enable |  |  |  |
-   | ADC clock prescaler |  | ADPS2:0 | 000: Division factor 2, 001: 2, 010: 4, ...|
-   | ADC result |  |  |  |
+   | Input channel | ADMUX | MUX3:0 | see fig. bellow |
+   | ADC enable | ADCSRA | 7-ADEN | if 1: enable |
+   | Start conversion | ADSCRA | 6-ADSC |  write this bit to one to start each conversion. In free running mode, write this bit to one to start the
+first conversion |
+   | ADC interrupt enable | ADSCRA | 3-ADIE | When this bit is written to one and the I-bit in SREG is set, the ADC conversion complete interrupt is activated. |
+   | ADC clock prescaler | ADSCRA | ADPS2:0 | see fig. bellow |
+   | ADC result | ADCL and ADCH (depends on ADLAR) | ADC9:0 | result |
+
+  <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab7/pictures/MUX.PNG">
+  <br>
+  <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab7/pictures/Prescaler.PNG"> 
 
 
 ### Version: Atmel Studio 7
