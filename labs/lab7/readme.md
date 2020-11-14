@@ -2,7 +2,7 @@
 <h2> Preparation Task</h2>
 
 <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab7/pictures/Equat.PNG">
-
+sa
 Calculate the ADC values for these voltages according to the following equation if reference is Vref=5V and number of bits for analog to digital conversion is n=10.
 
 ![Equation: ADC conversion](Images/eq_adc.png)
