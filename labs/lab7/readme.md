@@ -48,8 +48,9 @@ When none of pushbutton is pressed the voltage is 5V
 <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab7/pictures/simulation.PNG"> 
 
 <h2> main.cpp</h2>
+For some reason, whenever myParity(uint16_t message) is called from ISR, the program stops working. That's the reason why a function is called from while() with delay. I'm not sure, why it behaves like that... Maybe because the microcontroller has not enough time to update the display and send UART message?
 
-``cpp
+```cpp
 
 /***********************************************************************
  * 
@@ -192,4 +193,4 @@ ISR(ADC_vect)
     pre_value = value;
 }
 
-``
+```
