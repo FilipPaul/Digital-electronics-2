@@ -42,7 +42,8 @@ When none of pushbutton is pressed the voltage is 5V
    | `uart_puts` | const char* s | s string to be transmitted | `uart_puts(const char* s)`|
 
 <h2> UART DE2</h2>
-<img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab7/pictures/hand.JPG"> 
+<img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab7/pictures/hand.jpg"> 
+
 
 <h2> Simulation</h2>
 <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/lab7/pictures/simulation.PNG"> 
