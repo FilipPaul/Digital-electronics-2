@@ -20,11 +20,17 @@
 #include "uart.h"           // Peter Fleury's UART library
 
 /* Function definitions ----------------------------------------------*/
-/**
- * Main function where the program execution begins. Use Timer/Counter1
- * and start ADC conversion four times per second. Send value to LCD
- * and UART.
- */
+// returns 1 if odd (1,3.) and 0 if even(0,2...)
+    bool myParity(uint16_t message){
+    bool parity = 0;
+    while (message) //while message == 1
+    {
+        parity =   ~parity;
+        message =  message & (message -1);
+    }
+    return parity;    
+    }
+
 int main(void)
 {
     // Initialize LCD display
@@ -64,9 +70,25 @@ int main(void)
     // Infinite loop
     while (1)
     {
-        /* Empty loop. All subsequent operations are performed exclusively 
-         * inside interrupt service routines ISRs */
+        _delay_ms(100);
+
+    if( myParity(ADC)){
+        lcd_gotoxy(12,1);
+        lcd_puts(" ");
+        lcd_gotoxy(13,1);
+        lcd_puts("odd");
+        uart_puts(" parity: odd");
+        uart_puts("\n");
     }
+    else
+    {
+        lcd_gotoxy(12,1);
+        lcd_puts("even");
+        uart_puts(" parity: even");
+        uart_puts("\n");
+    }
+    }
+    
 
     // Will never reach this
     return 0;
@@ -81,6 +103,7 @@ ISR(TIMER1_OVF_vect)
 {
     // Start ADC conversion
     ADCSRA |= (1<<ADSC);
+
 }
 
 /* -------------------------------------------------------------------*/
@@ -90,13 +113,12 @@ ISR(TIMER1_OVF_vect)
  */
 ISR(ADC_vect)
 {
-;
+
     // print ADC value
     static uint16_t value = 0;
     static uint16_t pre_value = 0; // to avoid flashing display
     char lcd_string[2] = "";
     value = ADC;    // Copy ADC result to 16-bit variable
-
     if(value !=  pre_value){   //clear display whenever value change
     lcd_gotoxy(8,0);
     lcd_puts("    ");
@@ -112,6 +134,7 @@ ISR(ADC_vect)
     uart_puts("button pressed: ");
     uart_puts(lcd_string); 
     uart_puts("\n");
+
     }
     pre_value = value;
 }
