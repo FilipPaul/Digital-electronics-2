@@ -11,12 +11,6 @@ What is the general structure of I2C address and data frames?
    | Address | A6 | A5 | A4 | A3 | A2 | A1 | A0 | R/W | ACK | A6 = MSB|
    | Data    | D7 | D6 | D5 | D4 | D3 | D2 | D1 | D0 | ACK | D7 = MSB |
 
-
-## Part 1: Synchronize repositories and create a new folder
-
-Run Git Bash (Windows) of Terminal (Linux), navigate to your working directory, and update local repository. Create a new working folder `Labs/08-i2c` for this exercise.
-
-
 ## Part 2: I2C bus
 
 **TODO**
