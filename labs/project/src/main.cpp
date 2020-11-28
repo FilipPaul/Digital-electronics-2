@@ -72,10 +72,10 @@ ISR(TIMER1_OVF_vect)
       if (pos == 14){ // shift position
           shift = !shift;
         }
-      else if ((pos != 14) && (shift ==1))
+     /* else if ((pos != 14) && (shift ==1))
       {
         shift = 0;
-      }
+      }*/
          
         itoa(pos,StringToUpadate,10);
         uart_puts(StringToUpadate);
