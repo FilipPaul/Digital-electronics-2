@@ -20,6 +20,6 @@ For purpose of controlling the 4x3 matrix, we have written a library called "myM
 
 | **function** | **input** | **output** |**Description**|
 | :-: | :-: | :-: | :-- | 
-| `void initMatrix()`  | none | none | set columns as inputs with pullup resistors, and rows as output HIGH  |
-| `uint8_t scanMatrix()`   | none | uint8_t pos |returns position in form of integer of pushed button EX: 23 -> row 2 x column 3|
-| `const char* posToConstChar(uint8_t pos, bool shift)` |  `uint8_t pos` `bool shift` | `const char* button_name` |returns button name according to the position and also takes into account if shift button was pressed |
+| `initMatrix()`  | none | none | set columns as inputs with pullup resistors, and rows as output HIGH  |
+| `scanMatrix()`   | none | uint8_t pos |returns position in form of integer of pushed button EX: 23 -> row 2 x column 3|
+| `posToConstChar(uint8_t pos, bool shift)` |  `uint8_t pos` `bool shift` | `const char* button_name` |returns button name according to the position and also takes into account if shift button was pressed |
