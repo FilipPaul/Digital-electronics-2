@@ -19,7 +19,8 @@
 //functions
 void initMatrix(); // set pins as inputs with pullups and etc.
 uint8_t scanMatrix(); //returns number like 12 --> row 1, column 2
-const char* posToConstChar(uint8_t pos); // returns button name from position
-const char* shiftFun(uint8_t number); // to handle shift inputs
-uint16_t freqSetting();
+const char* posToConstChar(uint8_t pos, bool shift); // returns button name from position
+const char* shiftFun(uint8_t number, bool shift); // to handle shift inputs
+void callbacksToButtons(const char* button_name);
+
 #endif

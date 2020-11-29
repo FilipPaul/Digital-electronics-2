@@ -6,7 +6,7 @@
 #include <gpio.h>
 #include "lcd.h"            // Peter Fleury's LCD library
 
-const char* style[12]= {"homePage","2","3","4","5","6","7","8","9","shift","0","enter"};
+const char* style[12]= {"homePage","freq","3","4","5","6","7","8","9","shift","0","enter"};
 
 void homePage(uint8_t frequency,const char* waveform,bool shift){
     char lcdString[2] = ""; // string for updading LCD
@@ -33,10 +33,33 @@ void homePage(uint8_t frequency,const char* waveform,bool shift){
     }
 }
 
+void freqPage(uint8_t LCD_Xposition, const char* button){
+    if (LCD_Xposition < 2)
+    {
+        lcd_gotoxy(8,1);
+        lcd_puts("      ");
+    }
+    else{
+    lcd_gotoxy(LCD_Xposition+7,1);
+    lcd_puts(button);
+    }
+}
 
-void updateDisplay(uint8_t frequency, const char* waveform,bool shift, const char* type){
+
+void updateDisplay(uint8_t frequency, const char* waveform,bool shift, const char* type,const char* button_name){
+    static uint8_t LCD_Xposition = 0;
     if (type == style[0])
     {
         homePage(frequency,waveform,shift);
+    }
+        if (type == style[1]) //freq
+    {
+        freqPage(LCD_Xposition, button_name);
+        LCD_Xposition ++;
+        if (LCD_Xposition == 4)
+        {
+            LCD_Xposition = 0;
+        }
+        
     }
 }
