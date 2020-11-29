@@ -11,8 +11,8 @@ nějaký fešný obrázek zde...
 nějaká pěkná rovnice zde
 
 <h3> 4x3 keypad matrix </h3>
-<p>Key pad matrix is an array of buttons, where each button is connected to the 2 GPIOs, as can be seen at fig. below. Connecting buttons in this pattern reduces the number of used GPIOs. With this method, we can use only 7 (3 rows x 4 columns) pins to control 12 buttons. If we want to get the position of the pressed button, we need to set all columns as inputs with the internal pullup resistors and rows as output with HIGH logic level. The next step is to loop through all rows in the following pattern: ROW(i) = LOW, check all columns, if the column is LOW, then the button has position row(i) x column(LOW). If none of the columns is LOW set ROW(i) back to HIGH and go to the next row.
-schéma zapojení</p>
+<p>Key pad matrix is an array of buttons, where each button is connected to the 2 GPIOs, as can be seen at fig. below. Connecting buttons in this pattern reduces the number of used GPIOs. With this method, we can use only 7 (3 rows x 4 columns) pins to control 12 buttons. If we want to get the position of the pressed button, we need to set all columns as inputs with the internal pullup resistors and rows as output with HIGH logic level. The next step is to loop through all rows in the following pattern: ROW(i) = LOW, check all columns, if the column is LOW, then the button has position row(i) x column(LOW). If none of the columns is LOW set ROW(i) back to HIGH and go to the next row.</p>
+schéma zapojení
 
 <h2> Code description </h2>
 <h3> User Interface </h3>
@@ -23,3 +23,8 @@ For purpose of controlling the 4x3 matrix, we have written a library called "myM
 | `initMatrix()`  | none | none | set columns as inputs with pullup resistors, and rows as output HIGH  |
 | `scanMatrix()`   | none | uint8_t pos |returns position in form of integer of pushed button EX: 23 -> row 2 x column 3; returns 0 if nothing was pressed|
 | `posToConstChar(uint8_t pos, bool shift)` |  `uint8_t pos` `bool shift` | `const char* button_name` |returns button name according to the position and also takes into account if shift button was pressed |
+
+To scan matrix. function scanMatrix() is called in regular interval given by Timer1 overflow each 33ms. The display, UART and parameters like frequency, output status and waveform are then updated according to the pushed button.
+
+<h3> Simulation of User Interface </h3>
+ <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/project/pictures/UIsimulation.gif">
