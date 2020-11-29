@@ -223,7 +223,7 @@ ISR(TIMER1_OVF_vect)
           im_in_freq = 0;
           break;
 
-        default:
+        default: // do nothing untill Hz, kHz or MHz is pressed
           break;
         } //switch
       }   //else if
