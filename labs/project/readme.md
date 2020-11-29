@@ -10,8 +10,8 @@ nějaký fešný obrázek zde...
 <p>R-2R is basically a voltage divider created from resistors of 2 values. The output of this DAC is given by the following equation</p>
 nějaká pěkná rovnice zde
 
-<h3> 4x3 keypad matrix <\h3>
-<p>Key pad matrix is an array of buttons, where each button is connected to the 2 GPIOs, as can be seen at fig. below. Connecting buttons in this pattern reduces the number of used GPIOs. With this method, we can use only 7 (3 rows x 4 columns) pins to control 12 buttons. If we want to get the position of the pressed button, we need to set all columns as inputs with the internal pull up resistors and rows as output with HIGH logic level. The next step is to loop through all rows in the following pattern: ROW(i) = LOW, check all columns, if the column is LOW, then the button has position row(i) x column(LOW). If none of the columns is LOW set ROW(i) back to HIGH and go to the next row.
+<h3> 4x3 keypad matrix </h3>
+<p>Key pad matrix is an array of buttons, where each button is connected to the 2 GPIOs, as can be seen at fig. below. Connecting buttons in this pattern reduces the number of used GPIOs. With this method, we can use only 7 (3 rows x 4 columns) pins to control 12 buttons. If we want to get the position of the pressed button, we need to set all columns as inputs with the internal pullup resistors and rows as output with HIGH logic level. The next step is to loop through all rows in the following pattern: ROW(i) = LOW, check all columns, if the column is LOW, then the button has position row(i) x column(LOW). If none of the columns is LOW set ROW(i) back to HIGH and go to the next row.
 schéma zapojení</p>
 
 <h2> Code description </h2>
