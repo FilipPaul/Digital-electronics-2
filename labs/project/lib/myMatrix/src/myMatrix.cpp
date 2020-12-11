@@ -8,8 +8,8 @@
 
 uint8_t columns[4] = {Col_1,Col_2,Col_3,Col_4};
 uint8_t rows[3] = {row_3,row_2,row_1};
-const char* buttons_look_up[13]= {"1","2","3","4","5","6","7","8","9","shift","0","enter","none"};
-const char* shift_buttons_look_up[13]= {"freq","sine","ramp","Hz","kHz","MHz","7","8","9","shift","0","enter","none"};
+const char* buttons_look_up[13]= {"1","2","3","4","5","6","7","8","9","shift","0","onoff"};
+const char* shift_buttons_look_up[13]= {"freq","sine","ramp","Hz","kHz","MHz","7","8","9","shift","0","onoff"};
 
 
 void initMatrix(){
