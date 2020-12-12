@@ -23,9 +23,49 @@
 #include <stdio.h>
 #include <string.h>
 
-/* Function definitions ----------------------------------------------*/
-// returns 1 if odd (1,3.) and 0 if even(0,2...)
+#define DAC_0        PB0     // AVR pin where DAC is connected
+#define DAC_1        PB1     // AVR pin where DAC is connected
+#define DAC_2        PB2     // AVR pin where DAC is connected
+#define DAC_3        PB3     // AVR pin where DAC is connected
+#define DAC_4        PB4     // AVR pin where DAC is connected
+#define DAC_5        PB5     // AVR pin where DAC is connected
+#define DAC_6        PB6     // AVR pin where DAC is connected
+#define DAC_7        PB7     // AVR pin where DAC is connected
 
+const uint16_t lookup_sine[512] = {
+128,129,131,132,134,135,137,138,140,142,143,145,146,148,149,151,152,154,155,157,
+159,160,162,163,165,166,168,169,171,172,173,175,176,178,179,181,182,184,185,186,
+188,189,190,192,193,195,196,197,198,200,201,202,204,205,206,207,209,210,211,212,
+213,214,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,
+234,235,235,236,237,238,239,239,240,241,242,242,243,244,244,245,245,246,247,247,
+248,248,249,249,250,250,250,251,251,252,252,252,253,253,253,253,254,254,254,254,
+254,255,255,255,255,255,255,255,255,255,255,255,255,255,255,254,254,254,254,254,
+254,253,253,253,252,252,252,251,251,251,250,250,249,249,248,248,247,247,246,246,
+245,244,244,243,243,242,241,240,240,239,238,237,237,236,235,234,233,232,231,231,
+230,229,228,227,226,225,224,223,222,221,219,218,217,216,215,214,213,212,210,209,
+208,207,205,204,203,202,200,199,198,196,195,194,192,191,190,188,187,186,184,183,
+181,180,179,177,176,174,173,171,170,168,167,165,164,162,161,159,158,156,155,153,
+152,150,149,147,145,144,142,141,139,138,136,135,133,131,130,128,127,125,124,122,
+120,119,117,116,114,113,111,110,108,106,105,103,102,100,99,97,96,94,93,91,
+90,88,87,85,84,82,81,79,78,76,75,74,72,71,69,68,67,65,64,63,
+61,60,59,57,56,55,53,52,51,50,48,47,46,45,43,42,41,40,39,38,
+37,36,34,33,32,31,30,29,28,27,26,25,24,24,23,22,21,20,19,18,
+18,17,16,15,15,14,13,12,12,11,11,10,9,9,8,8,7,7,6,6,
+5,5,4,4,4,3,3,3,2,2,2,1,1,1,1,1,1,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,2,2,2,2,
+3,3,3,4,4,5,5,5,6,6,7,7,8,8,9,10,10,11,11,12,
+13,13,14,15,16,16,17,18,19,20,20,21,22,23,24,25,26,27,28,29,
+30,31,32,33,34,35,36,37,38,39,41,42,43,44,45,46,48,49,50,51,
+53,54,55,57,58,59,60,62,63,65,66,67,69,70,71,73,74,76,77,79,
+80,82,83,84,86,87,89,90,92,93,95,96,98,100,101,103,104,106,107,109,
+110,112,113,115,117,118,120,121,123,124,126,128,};
+
+uint16_t counter = 0;
+uint16_t help_counter = 950;
+uint16_t steps = 0;
+uint16_t freq = 61;
+uint16_t value = 0;
+uint16_t help_value = 255;
 
 uint16_t frequency = 100;
 const char *waveform = "sine";
@@ -44,6 +84,16 @@ uint8_t shiftChar[8] = { //adress 0
 
 int main(void)
 {
+
+    // Define pins as output
+  GPIO_config_output(&DDRB, DAC_0);
+  GPIO_config_output(&DDRB, DAC_1);
+  GPIO_config_output(&DDRB, DAC_2);
+  GPIO_config_output(&DDRB, DAC_3);
+  GPIO_config_output(&DDRB, DAC_4);
+  GPIO_config_output(&DDRB, DAC_5);
+  GPIO_config_output(&DDRB, DAC_6);
+  GPIO_config_output(&DDRB, DAC_7);
   // init matrix
   initMatrix();
   // Initialize LCD display
@@ -65,7 +115,7 @@ int main(void)
   lcd_puts("Freq:");
   lcd_gotoxy(8, 1);
   lcd_puts("100 Hz");
-
+  _delay_ms(2);
   //custom character
   lcd_command(1 << LCD_CGRAM);
   for (uint8_t i = 0; i < 8; i++)
@@ -81,6 +131,10 @@ int main(void)
   // set timer for scanning
   TIM1_overflow_33ms();
   TIM1_overflow_interrupt_enable();
+
+    // set timer for generator
+  TIM0_overflow_16us();
+  TIM0_overflow_interrupt_enable();
 
   // Enables interrupts by setting the global interrupt mask
   sei();
@@ -237,5 +291,93 @@ ISR(TIMER1_OVF_vect)
   }
   pre_pos = pos; // to avoid multiple press
 } //ISR
+
+ISR(TIMER0_OVF_vect)
+{
+    // calculate increment's steps for counter to reach chosen frequency
+    steps = frequency/66; 
+    counter = counter + steps;
+    help_counter = counter - steps;
+
+    if(status==1)
+    {
+        if((strcmp(waveform , "sine")==0) )
+        {
+            value = lookup_sine[counter];
+            if(counter<=950)
+            {
+                PORTB = (value & 0b11111111);
+            }
+            else if(counter > 950)
+            {
+                counter = 0;
+            }
+        }
+
+        if((strcmp(waveform , "sqr")==0) )
+        {
+            if(counter<=475)
+            {
+                PORTB = 0b11111111;
+            }
+            else if(counter > 475 && counter < 950) 
+            {
+                PORTB = 0b00000000; 
+            }
+            else if (counter >= 950)
+            {
+                counter = 0;
+            }            
+        }
+
+        if((strcmp(waveform , "ramp")==0) )
+        {
+            if(counter<=950)
+            {
+                value = counter/4;
+                if(value<256)
+                {
+                    PORTB = (value & 0b11111111);
+                }
+                else    
+                {
+                    value=0;                
+                }
+            }
+        else if (counter > 950)
+        {
+            counter = 0;
+        }
+        }
+
+        if((strcmp(waveform , "tria")==0) )
+        {
+            if(counter<950)
+            {
+                value = counter/4;
+                help_value = help_counter/4;
+                if(value<128)
+                {
+                    PORTB = (2*value & 0b11111111);
+                }
+                else if(value>=128)
+                {
+                    PORTB = (2*help_value & 0b11111111);                
+                }
+                else if(value>=255)
+                {
+                    value=0;
+                    help_value=255;   
+                }
+            }
+            else if (counter >= 950)
+            {
+                help_counter = 950;
+                counter = 0;
+            }
+        }
+    }
+}
+
 
 
