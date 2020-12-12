@@ -11,7 +11,6 @@
  **********************************************************************/
 
 /* Includes ----------------------------------------------------------*/
-#include <Arduino.h>
 #include <avr/io.h>        // AVR device-specific IO definitions
 #include <avr/interrupt.h> // Interrupts standard C library for AVR-GCC
 #include "timer.h"         // Timer library for AVR-GCC
@@ -19,9 +18,14 @@
 #include <stdlib.h>        // C library. Needed for conversion function
 #include "uart.h"          // Peter Fleury's UART library
 #include <myMatrix.h>      // library for matrix scanning
+#include "gpio.h"
+#include <util/delay.h> 
+#include <stdio.h>
+#include <string.h>
 
 /* Function definitions ----------------------------------------------*/
 // returns 1 if odd (1,3.) and 0 if even(0,2...)
+
 
 uint16_t frequency = 100;
 const char *waveform = "sine";
@@ -98,7 +102,6 @@ ISR(TIMER1_OVF_vect)
   static bool shift = 0;
   static const char *button_name = ""; // button Name
   static uint8_t input_counter = 0;
-  char StringToUpadate[2] = ""; //string to update UART
   static bool im_in_freq = 0;
 
   pos = scanMatrix();                       // get position in form of int ex:23 row 2, column 3
@@ -132,11 +135,11 @@ ISR(TIMER1_OVF_vect)
       lcd_puts(" ");
     }
 
-    if (button_name == "freq") // freq is pressed
+    if (strcmp(button_name , "freq")==0) // freq is pressed
     {
       im_in_freq = 1; // variable to detect, that frequency isn't already selected
     }
-    else if(button_name == "onoff")
+    else if(strcmp(button_name , "onoff")==0)
     {
       status = !status;
       if (status == 1)
@@ -154,7 +157,7 @@ ISR(TIMER1_OVF_vect)
       
     }
 
-    else if((button_name == "sine") || (button_name == "ramp")){
+    else if((strcmp(button_name , "sine")==0) || (strcmp(button_name , "ramp")==0)){
       waveform = button_name;
         lcd_gotoxy(8, 0);
         lcd_puts(waveform);
@@ -234,3 +237,5 @@ ISR(TIMER1_OVF_vect)
   }
   pre_pos = pos; // to avoid multiple press
 } //ISR
+
+

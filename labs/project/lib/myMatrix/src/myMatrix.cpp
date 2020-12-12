@@ -1,10 +1,15 @@
-#include <Arduino.h>        // delay definitions
-#include <avr/io.h>         // AVR device-specific IO definitions
-#include <avr/interrupt.h>  // Interrupts standard C library for AVR-GCC
-#include <stdlib.h>         // C library. Needed for conversion function
-#include <myMatrix.h>       // library for matrix scanning
-#include <gpio.h>
-#include "lcd.h"            // Peter Fleury's LCD library
+#include <avr/io.h>        // AVR device-specific IO definitions
+#include <avr/interrupt.h> // Interrupts standard C library for AVR-GCC
+#include "timer.h"         // Timer library for AVR-GCC
+#include "lcd.h"           // Peter Fleury's LCD library
+#include <stdlib.h>        // C library. Needed for conversion function
+#include "uart.h"          // Peter Fleury's UART library
+#include <myMatrix.h>      // library for matrix scanning
+#include "gpio.h"
+#include <util/delay.h> 
+#include <stdio.h>
+#include <string.h>
+
 
 uint8_t columns[4] = {Col_1,Col_2,Col_3,Col_4};
 uint8_t rows[3] = {row_3,row_2,row_1};
@@ -126,7 +131,7 @@ const char* shiftFun(uint8_t number, bool shift){
     else
     {
         button_name = shift_buttons_look_up[number];
-        if (button_name != "shift")
+        if (strcmp(button_name , "shift")!=0)
         {
             shift = 0;
         }
