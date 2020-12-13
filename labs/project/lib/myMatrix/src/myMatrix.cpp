@@ -44,7 +44,7 @@ uint8_t scanMatrix(){ //returns int like 14 --> row 1, column 4
         //set row to LOW and scan through collumns
         GPIO_toggle(&MATRIX_PORT, rows[i]); // set row pin LOW
         for (size_t k = 0; k < 4; k++) // scan through all columns
-        { _delay_us(20); // needed for its functionality
+        { //_delay_us(5); // needed for Simul IDE crap
             if (GPIO_read(&PINC, columns[k]) == 0)
             {
                 pos_row = i+1;

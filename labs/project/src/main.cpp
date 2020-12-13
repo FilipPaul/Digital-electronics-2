@@ -227,7 +227,7 @@ ISR(TIMER1_OVF_vect)
         lcd_puts("        ");
         lcd_gotoxy(8, 1);
         lcd_puts(button_name);
-        _delay_us(2);
+        //_delay_us(2); needed for Simul IDE crap
         input_counter++;
       }
       else if (input_counter == 1) // first digit (MSB)
@@ -295,7 +295,7 @@ ISR(TIMER1_OVF_vect)
 ISR(TIMER0_OVF_vect)
 {
     // calculate increment's steps for counter to reach chosen frequency
-    steps = frequency/66; 
+    steps = frequency/15; 
     counter = counter + steps;
     help_counter = counter - steps;
 
@@ -304,11 +304,11 @@ ISR(TIMER0_OVF_vect)
         if((strcmp(waveform , "sine")==0) )
         {
             value = lookup_sine[counter];
-            if(counter<=950)
+            if(counter<=512)
             {
                 PORTB = (value & 0b11111111);
             }
-            else if(counter > 950)
+            else if(counter > 512)
             {
                 counter = 0;
             }
@@ -316,15 +316,15 @@ ISR(TIMER0_OVF_vect)
 
         if((strcmp(waveform , "sqre")==0) )
         {
-            if(counter<=475)
+            if(counter<=256)
             {
                 PORTB = 0b11111111;
             }
-            else if(counter > 475 && counter < 950) 
+            else if(counter > 256 && counter < 512) 
             {
                 PORTB = 0b00000000; 
             }
-            else if (counter >= 950)
+            else if (counter >= 512)
             {
                 counter = 0;
             }            
@@ -332,9 +332,9 @@ ISR(TIMER0_OVF_vect)
 
         if((strcmp(waveform , "ramp")==0) )
         {
-            if(counter<=950)
+            if(counter<=512)
             {
-                value = counter/4;
+                value = counter/2;
                 if(value<256)
                 {
                     PORTB = (value & 0b11111111);
@@ -344,7 +344,7 @@ ISR(TIMER0_OVF_vect)
                     value=0;                
                 }
             }
-        else if (counter > 950)
+        else if (counter > 512)
         {
             counter = 0;
         }
@@ -352,10 +352,10 @@ ISR(TIMER0_OVF_vect)
 
         if((strcmp(waveform , "tria")==0) )
         {
-            if(counter<950)
+            if(counter<512)
             {
-                value = counter/4;
-                help_value = help_counter/4;
+                value = counter/2;
+                help_value = help_counter/2;
                 if(value<128)
                 {
                     PORTB = (2*value & 0b11111111);
@@ -367,17 +367,14 @@ ISR(TIMER0_OVF_vect)
                 else if(value>=255)
                 {
                     value=0;
-                    help_value=255;   
+                    help_value=128;   
                 }
             }
-            else if (counter >= 950)
+            else if (counter >= 512)
             {
-                help_counter = 950;
+                help_counter = 512;
                 counter = 0;
             }
         }
     }
 }
-
-
-
