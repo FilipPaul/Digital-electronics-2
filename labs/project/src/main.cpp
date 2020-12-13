@@ -58,7 +58,7 @@ const uint16_t lookup_sine[512] = {
 30,31,32,33,34,35,36,37,38,39,41,42,43,44,45,46,48,49,50,51,
 53,54,55,57,58,59,60,62,63,65,66,67,69,70,71,73,74,76,77,79,
 80,82,83,84,86,87,89,90,92,93,95,96,98,100,101,103,104,106,107,109,
-110,112,113,115,117,118,120,121,123,124,126,128,};
+110,112,113,115,117,118,120,121,123,124,126,128};
 
 uint16_t counter = 0;
 uint16_t help_counter = 950;
@@ -133,7 +133,7 @@ int main(void)
   TIM1_overflow_interrupt_enable();
 
     // set timer for generator
-  TIM0_overflow_16us();
+  TIM0_overflow_128us();
   TIM0_overflow_interrupt_enable();
 
   // Enables interrupts by setting the global interrupt mask
@@ -211,7 +211,7 @@ ISR(TIMER1_OVF_vect)
       
     }
 
-    else if((strcmp(button_name , "sine")==0) || (strcmp(button_name , "ramp")==0)){
+    else if((strcmp(button_name , "sine")==0) || (strcmp(button_name , "ramp")==0)|| (strcmp(button_name , "sqre")==0) || (strcmp(button_name , "tria")==0)){
       waveform = button_name;
         lcd_gotoxy(8, 0);
         lcd_puts(waveform);
@@ -314,7 +314,7 @@ ISR(TIMER0_OVF_vect)
             }
         }
 
-        if((strcmp(waveform , "sqr")==0) )
+        if((strcmp(waveform , "sqre")==0) )
         {
             if(counter<=475)
             {
