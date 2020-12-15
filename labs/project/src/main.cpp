@@ -1,15 +1,5 @@
-/***********************************************************************
- * 
- * Analog-to-digital conversion with displaying result on LCD and 
- * transmitting via UART.
- * ATmega328P (Arduino Uno), 16 MHz, AVR 8-bit Toolchain 3.6.2
- *
- * Copyright (c) 2018-2020 Tomas Fryza
- * Dept. of Radio Electronics, Brno University of Technology, Czechia
- * This work is licensed under the terms of the MIT license.
- * 
- **********************************************************************/
-
+//DE 2 Project
+//Authors: Kristýna Pijáčková, Filip Paul
 /* Includes ----------------------------------------------------------*/
 #include <avr/io.h>        // AVR device-specific IO definitions
 #include <avr/interrupt.h> // Interrupts standard C library for AVR-GCC
@@ -18,10 +8,10 @@
 #include <stdlib.h>        // C library. Needed for conversion function
 #include "uart.h"          // Peter Fleury's UART library
 #include <myMatrix.h>      // library for matrix scanning
-#include "gpio.h"
-#include <util/delay.h> 
-#include <stdio.h>
-#include <string.h>
+#include "gpio.h"          // library written in DE2 labs 
+#include <util/delay.h>    // for delays - was used for debuging, because simulIDE need some delays
+#include <stdio.h>         // AVR device-specific IO definitions
+#include <string.h>        // library for strcmp function
 
 #define DAC_0        PB0     // AVR pin where DAC is connected
 #define DAC_1        PB1     // AVR pin where DAC is connected
@@ -32,6 +22,7 @@
 #define DAC_6        PB6     // AVR pin where DAC is connected
 #define DAC_7        PB7     // AVR pin where DAC is connected
 
+// pre-calculated up table for sine source: https://daycounter.com/Calculators/Sine-Generator-Calculator.phtml
 const uint16_t lookup_sine[512] = {
 128,129,131,132,134,135,137,138,140,142,143,145,146,148,149,151,152,154,155,157,
 159,160,162,163,165,166,168,169,171,172,173,175,176,178,179,181,182,184,185,186,
@@ -60,12 +51,11 @@ const uint16_t lookup_sine[512] = {
 80,82,83,84,86,87,89,90,92,93,95,96,98,100,101,103,104,106,107,109,
 110,112,113,115,117,118,120,121,123,124,126,128};
 
-uint16_t counter = 0;
-uint16_t help_counter = 950;
-uint16_t steps = 0;
-uint16_t freq = 61;
-uint16_t value = 0;
-uint16_t help_value = 255;
+uint16_t counter = 0;           // needed to adjust frequency of output signal
+// uint16_t help_counter = 512; // not needed without triangle
+uint16_t steps = 0;             // needed to adjust frequency of output signal
+uint16_t value = 0;             // output value send to PORTB...the output pins for DAC
+// uint16_t help_value = 255;   // not needed without triangle
 
 uint16_t frequency = 100;
 const char *waveform = "sine";
@@ -85,7 +75,7 @@ uint8_t shiftChar[8] = { //adress 0
 int main(void)
 {
 
-    // Define pins as output
+  // Define pins as output
   GPIO_config_output(&DDRB, DAC_0);
   GPIO_config_output(&DDRB, DAC_1);
   GPIO_config_output(&DDRB, DAC_2);
@@ -127,7 +117,7 @@ int main(void)
   lcd_command(1 << LCD_DDRAM);
 
   // Initialize UART to asynchronous, 8N1, 9600
-  uart_init(UART_BAUD_SELECT(9600, F_CPU));
+  //uart_init(UART_BAUD_SELECT(9600, F_CPU)); with uart SIMUL IDE freezing.. therefor all Uarts are commented
   // set timer for scanning
   TIM1_overflow_33ms();
   TIM1_overflow_interrupt_enable();
@@ -157,6 +147,7 @@ ISR(TIMER1_OVF_vect)
   static const char *button_name = ""; // button Name
   static uint8_t input_counter = 0;
   static bool im_in_freq = 0;
+  //char uart_string[2] = "";     //variable for updating strings to UART
 
   pos = scanMatrix();                       // get position in form of int ex:23 row 2, column 3
   button_name = posToConstChar(pos, shift); //grt name of button in form of const char* from position
@@ -193,7 +184,7 @@ ISR(TIMER1_OVF_vect)
     {
       im_in_freq = 1; // variable to detect, that frequency isn't already selected
     }
-    else if(strcmp(button_name , "onoff")==0)
+    else if(strcmp(button_name , "onoff")==0) // on/off
     {
       status = !status;
       if (status == 1)
@@ -202,23 +193,26 @@ ISR(TIMER1_OVF_vect)
         lcd_puts("   ");
         lcd_gotoxy(13, 0);
         lcd_puts("on");
+      // uart_puts("status: on \n");
       }
       if (status == 0)
       {
         lcd_gotoxy(13, 0);
         lcd_puts("off");
+      // uart_puts("status: off \n");
       }
       
     }
-
+    // uploading the waveform name
     else if((strcmp(button_name , "sine")==0) || (strcmp(button_name , "ramp")==0)|| (strcmp(button_name , "sqre")==0) || (strcmp(button_name , "tria")==0)){
       waveform = button_name;
         lcd_gotoxy(8, 0);
         lcd_puts(waveform);
+      //  uart_puts("waveform: ");
+      //  uart_puts(waveform);
+      //  uart_puts("\n");
     }
     
-
-
     if (im_in_freq == 1)
     {
       if (input_counter == 0) // wait for input ("freq" on display)
@@ -227,6 +221,9 @@ ISR(TIMER1_OVF_vect)
         lcd_puts("        ");
         lcd_gotoxy(8, 1);
         lcd_puts(button_name);
+       // uart_puts("pressed button: ");
+       // uart_puts(button_name);
+       // uart_puts("\n");
         //_delay_us(2); needed for Simul IDE crap
         input_counter++;
       }
@@ -257,7 +254,11 @@ ISR(TIMER1_OVF_vect)
           frequency = 1000 * digits[0] + 100 * digits[1] + 10 * digits[2] + digits[3];
           lcd_gotoxy(7 + input_counter, 1);
           lcd_puts(" Hz");
-          uart_puts("frequency: ");
+          //itoa(frequency, uart_string, 10);
+          // uart_puts("frequency: ");
+          // uart_puts(uart_string);
+          // uart_puts(Hz);
+          // uart_puts("\n");
           input_counter = 0;
           im_in_freq = 0;
           break;
@@ -267,6 +268,11 @@ ISR(TIMER1_OVF_vect)
           frequency = 1000 * digits[0] + 100 * digits[1] + 10 * digits[2] + digits[3];
           lcd_gotoxy(7 + input_counter, 1);
           lcd_puts(" kHz");
+          //itoa(frequency, uart_string, 10);
+          // uart_puts("frequency: ");
+          // uart_puts(uart_string);
+          // uart_puts(kHz);
+          // uart_puts("\n");
           input_counter = 0;
           im_in_freq = 0;
           break;
@@ -276,6 +282,12 @@ ISR(TIMER1_OVF_vect)
           frequency = 1000 * digits[0] + 100 * digits[1] + 10 * digits[2] + digits[3];
           lcd_gotoxy(7 + input_counter, 1);
           lcd_puts(" MHz");
+          //itoa(frequency, uart_string, 10);
+          // uart_puts("frequency: ");
+          // uart_puts(uart_string);
+          // uart_puts(MHz);
+          // uart_puts("\n");
+          
           input_counter = 0;
           im_in_freq = 0;
           break;
@@ -292,89 +304,118 @@ ISR(TIMER1_OVF_vect)
   pre_pos = pos; // to avoid multiple press
 } //ISR
 
+
+/***********************************************************************
+ * 
+ * Part for generating signals with three included waveforms - sine,
+ * square and ramp with possible frequency range 15Hz to 1000Hz.
+ * 
+ **********************************************************************/
+
+// timer 0 is used as frequency counter for the signal generator
+
 ISR(TIMER0_OVF_vect)
 {
-    // calculate increment's steps for counter to reach chosen frequency
+    // calculate steps for counter to reach chosen frequency
+    // steps = frequency * 512 (size of look up table) / 7812 (1/128us - timer0)
     steps = frequency/15; 
+    // Counts up with increrement of steps - this allows to vary the frequency of the signal
     counter = counter + steps;
-    help_counter = counter - steps;
+    // help_counter = counter - steps;
 
-    if(status==1)
+    if(status==1) // the "on/off" button is pressed and the actual status is "on", the signal appears on the output
     {
-        if((strcmp(waveform , "sine")==0) )
-        {
-            value = lookup_sine[counter];
-            if(counter<=512)
-            {
-                PORTB = (value & 0b11111111);
-            }
-            else if(counter > 512)
+        if((strcmp(waveform , "sine")==0) )         // if sine waveform was chosen; strcmp helps to compare string values
+        {   
+            value = lookup_sine[counter];           // use look up table with pre-calculated values for sine wave, the x-th value is chosen each time, given by the counter value
+            if(counter<=512)                        // if the counter is smaller than 512 (look up table size), the DAC outputs are activated
+            {                                       // to PORTB, where the output pins for DAC are connected receives the actual value to output at the moment 
+                PORTB = (value & 0b11111111);       // this value is compared with 0b11111111 / e.g. if value = 4 in dec, then PORTB = 0b00000100 & 0b11111111 = 0b00000100   
+            }                                       // and only the pin PB5 for DAC_5 is active
+            else if(counter > 512)                  // if the counter value is bigger than 512, this part sets the counter to 0 and the whole process repeats
             {
                 counter = 0;
             }
         }
 
-        if((strcmp(waveform , "sqre")==0) )
+        if((strcmp(waveform , "sqre")==0) )         // if square waveform was chosen; strcmp helps to compare string values
         {
-            if(counter<=256)
+            if(counter<=256)                        // if the counter value is smaller than 256 (half the size), the PORTB has all output pins active
             {
-                PORTB = 0b11111111;
+                PORTB = 0b11111111;                 
             }
-            else if(counter > 256 && counter < 512) 
+            else if(counter > 256 && counter < 512) // for the counter value bigger than 256 but smaller than 512, the PORTB has all output pins set to 0
             {
                 PORTB = 0b00000000; 
             }
-            else if (counter >= 512)
+            else if (counter >= 512)                // if the counter value is bigger than 512, this part sets the counter to 0 and the whole process repeats
             {
                 counter = 0;
             }            
         }
-
-        if((strcmp(waveform , "ramp")==0) )
+    
+        if((strcmp(waveform , "ramp")==0) )         // if ramp waveform was chosen; strcmp helps to compare string values
         {
-            if(counter<=512)
+            if(counter<512)                         // while the counter value is smaller than 512
             {
-                value = counter/2;
-                if(value<256)
-                {
+                value = counter/2;                  // the value passed to the output is calculated as half the value of the counter - 0 to 512/2 (256)
+                if(value<256)                       // if value smaller than 256 - actually always true, the PORTB receives the current value and with the help 
+                {                                   // of logical AND activates the right output pins
                     PORTB = (value & 0b11111111);
                 }
                 else    
                 {
-                    value=0;                
+                    value=0;                        // resets the the value back to 0
                 }
             }
-        else if (counter > 512)
-        {
-            counter = 0;
-        }
-        }
-
-        if((strcmp(waveform , "tria")==0) )
-        {
-            if(counter<512)
+            else if (counter >= 512)                 // if the counter value is bigger than 512, this part sets the counter to 0 and the whole process repeats
             {
-                value = counter/2;
-                help_value = help_counter/2;
-                if(value<128)
-                {
-                    PORTB = (2*value & 0b11111111);
-                }
-                else if(value>=128)
-                {
-                    PORTB = (2*help_value & 0b11111111);                
-                }
-                else if(value>=255)
-                {
-                    value=0;
-                    help_value=128;   
-                }
-            }
-            else if (counter >= 512)
-            {
-                help_counter = 512;
                 counter = 0;
             }
         }
+        
+//      This part was dedicated for triangle, however it did not work ideally... 
+//      in ideal case, we would use another pre-calculated look up table for triangle and use same method as with sine
+//      but the program would't let us compile and would not create the .HEX file, so this waveform was left out.
+//      For the look up table version: (https://daycounter.com/Calculators/Triangle-Wave-Generator-Calculator.phtml to generate the look up table, which is not included)
+//         if((strcmp(waveform , "tria")==0))
+//         {
+//             value = lookup_triangle[counter];       
+//             if(counter<=512)                        
+//             {                                       
+//                 PORTB = (value & 0b11111111);       
+//             }                                       
+//             else if(counter > 512)                  
+//             {
+//                 counter = 0;
+//             }
+//         }
+//      The rather not working version:
+//         if((strcmp(waveform , "tria")==0) )       
+//         {
+//             if(counter<512)
+//             {
+//                 value = counter/2;
+//                 help_value = help_counter/2;
+//                 if(value<128)
+//                 {
+//                     PORTB = (2*value & 0b11111111);
+//                 }
+//                 else if(value>=128)
+//                 {
+//                     PORTB = (2*help_value & 0b11111111);                
+//                 }
+//                 else if(value>=255)
+//                 {
+//                     value=0;
+//                     help_value=128;   
+//                 }
+//             }
+//             else if (counter >= 512)
+//             {
+//                 help_counter = 512;
+//                 counter = 0;
+//             }
+//        }
     }
 }

@@ -121,7 +121,7 @@ const char* posToConstChar(uint8_t pos, bool shift){
     return button_name;
 }
 
-
+// this function returns correct name according to shift state
 const char* shiftFun(uint8_t number, bool shift){
     const char* button_name;
     if (shift == 0)
