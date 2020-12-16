@@ -60,10 +60,11 @@ The generator is realized in the main.c file using counter frequency 7812Hz give
  <img src = "https://github.com/FilipPaul/Digital-Electronics-2/blob/master/labs/project/pictures/finalGIF.gif">
  
  <h3> Reference links </h3>
-  https://hackaday.com/2016/08/10/fun-audio-waveform-generator-is-more-than-the-sum-of-its-parts/?fbclid=IwAR0Nk2zbO9rXzHuYk9N9j1dR9Zuk-eaXMND-rjAb6OhCiWJ3W1Z2zMQk1-Y 
-  https://en.wikipedia.org/wiki/Resistor_ladder
+  [1] https://hackaday.com/2016/08/10/fun-audio-waveform-generator-is-more-than-the-sum-of-its-parts/?fbclid=IwAR0Nk2zbO9rXzHuYk9N9j1dR9Zuk-eaXMND-rjAb6OhCiWJ3W1Z2zMQk1-Y 
+</br>
+  [2] https://en.wikipedia.org/wiki/Resistor_ladder
 </br>
 
- https://daycounter.com/Calculators/Sine-Generator-Calculator.phtml
+  [3] https://daycounter.com/Calculators/Sine-Generator-Calculator.phtml
  
  
