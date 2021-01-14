@@ -41,7 +41,7 @@ typedef enum {              // FSM declaration
  */
 int main(void)
 {
-    // Initialize I2C (TWI)
+ // Initialize I2C (TWI)
     twi_init();
 
     // Initialize UART to asynchronous, 8N1, 9600
@@ -76,19 +76,67 @@ int main(void)
  */
 ISR(TIMER1_OVF_vect)
 {
+    static uint8_t seconds;
+    static uint8_t seconds10;
+    static uint8_t minutes;
+    static uint8_t minutes10;
+
     static state_t state = STATE_IDLE;  // Current state of the FSM
     static uint8_t addr = 7;            // I2C slave address
     uint8_t result = 1;                 // ACK result from the bus
     char uart_string[2] = "0"; // String for converting numbers by itoa()
 
-    // FSM
-    switch (state)
-    {
-    // Increment I2C slave address
-    case STATE_IDLE:
-        addr++;
-        // If slave address is between 8 and 119 then move to SEND state
 
+    if(!twi_start((0b1101000<<1) + TWI_WRITE)){
+        twi_write(0x00);
+        twi_stop();
+        if(!twi_start((0b1101000<<1) + TWI_READ))
+        result = twi_read_ack();
+        seconds = result & 0b00001111;
+        seconds10 = result & 0b01110000;
+        seconds10 = (seconds10>>4);
+        result = twi_read_nack();
+        minutes = result & 0b00001111;
+        minutes10 = result & 0b01110000;
+        minutes10 = (seconds10>>4);
+        void twi_stop(void);
+
+        uart_puts("time: ");
+        itoa(minutes10, uart_string,10);
+        uart_puts(uart_string);
+        itoa(minutes, uart_string,10);
+        uart_puts(uart_string);
+        uart_puts(":");
+
+       
+        itoa(seconds10, uart_string,10);
+        uart_puts(uart_string);
+        itoa(seconds, uart_string,10);
+        uart_puts(uart_string);
+        uart_puts("\n");
+
+
+
+
+    }
+
+    // FSM
+   /* switch (state)
+    {
+    //increment addres
+    case STATE_IDLE:
+        // If slave address is between 8 and 119 then move to SEND state
+        if (addr >= 180)
+        {
+            state = STATE_IDLE;
+            
+        }
+        else
+        {
+        state = STATE_SEND;
+        addr++;
+        }
+        
         break;
     
     // Transmit I2C slave address and get result
@@ -102,15 +150,32 @@ ISR(TIMER1_OVF_vect)
         // +------------------------+------------+
         result = twi_start((addr<<1) + TWI_WRITE);
         twi_stop();
-        /* Test result from I2C bus. If it is 0 then move to ACK state, 
-         * otherwise move to IDLE */
+        // Test result from I2C bus. If it is 0 then move to ACK state, 
+        //  otherwise move to IDLE 
+        if (result == 0)
+        {
+            state = STATE_ACK;
+        }
+        else
+        {
+            state = STATE_IDLE;
+        }
+        
+        
 
         break;
 
     // A module connected to the bus was found
     case STATE_ACK:
         // Send info about active I2C slave to UART and move to IDLE
-
+        itoa(addr, uart_string,10);
+        uart_puts("I found slave on adress: ");
+        uart_puts(uart_string);
+        //itoa(addr, uart_string,16);
+        //uart_puts(", HEX:  ");
+        //uart_puts(uart_string);
+        uart_puts("\n");
+        state = STATE_IDLE;
         break;
 
     // If something unexpected happens then move to IDLE
@@ -118,4 +183,6 @@ ISR(TIMER1_OVF_vect)
         state = STATE_IDLE;
         break;
     }
+    
+   */
 }
